@@ -10,7 +10,7 @@ class modUserAdmin(UserAdmin):
     add_form = modUserCreationForm
     form = modUserChangeForm
     model = modUser
-    list_display = ["email", "username", ]
+    list_display = ["email", "username", "password", "firstName", "lastName", "phoneNumber", "registrationDate"]
 
 
 admin.site.register(modUser, modUserAdmin)

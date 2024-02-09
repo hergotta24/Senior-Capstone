@@ -7,10 +7,10 @@ from .models import modUser
 class modUserCreationForm(UserCreationForm):
     class Meta:
         model = modUser
-        fields = ("username", "email")
+        fields = ("email", "username", "password", "firstName", "lastName", "phoneNumber", "registrationDate")
 
 
 class modUserChangeForm(UserChangeForm):
     class Meta:
         model = modUser
-        fields = ("username", "email")
+        fields = ("email", "username", "password", "firstName", "lastName", "phoneNumber", "registrationDate")
