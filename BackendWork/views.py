@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.views import View
 
 
 def user_login(request):
@@ -17,6 +18,25 @@ def user_login(request):
     else:
         return render(request, 'login.html')
 
+
+class user_registration(View):
+    @staticmethod
+    def get(request):
+        return redirect('/')
+
+    @staticmethod
+    def post(self, request):
+        return redirect('/')
+
+
+class user_info_change(View):
+    @staticmethod
+    def get(request):
+        return redirect('/')
+
+    @staticmethod
+    def post(self, request):
+        return redirect('/')
 
 def home(request):
     return render(request, 'home.html')
