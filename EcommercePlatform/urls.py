@@ -1,5 +1,5 @@
 """
-URL configuration for EcommercePlatform project.
+URL configuration for Crap project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -17,8 +17,11 @@ Including another URLconf
     This is the first develop branch change
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from BackendWork.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', user_login, name='user_login'),
+    path('', home, name='home')
 ]

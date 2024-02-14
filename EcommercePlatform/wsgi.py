@@ -1,5 +1,5 @@
 """
-WSGI config for EcommercePlatform project.
+WSGI config for Crap project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
