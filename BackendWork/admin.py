@@ -2,21 +2,20 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import modUserCreationForm, modUserChangeForm
-from .models import modUser, User, Address, Storefront, CustomerReviews, StoreReviews, Product, Category, SubCategory, \
+from .forms import UserCreationForm, UserChangeForm
+from .models import User, Address, Storefront, CustomerReviews, StoreReviews, Product, Category, SubCategory, \
     ProductVideos, ProductImages, ProductQuestions, ProductReviews, Invoice, LineItem, DisputeTicket
 
 
-class modUserAdmin(UserAdmin):
-    add_form = modUserCreationForm
-    form = modUserChangeForm
-    model = modUser
+class UserAdmin(UserAdmin):
+    add_form = UserCreationForm
+    form = UserChangeForm
+    model = User
     list_display = ["email", "username", "password", "firstName", "lastName", "phoneNumber", "registrationDate"]
 
 
 # Register models here
-admin.site.register(modUser, modUserAdmin)
-admin.site.register(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(Address)
 admin.site.register(Storefront)
 admin.site.register(CustomerReviews)

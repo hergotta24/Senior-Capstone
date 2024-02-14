@@ -1,43 +1,23 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.core.validators import MinLengthValidator
-
-from datetime import datetime
+from django.utils import timezone
 
 
 # Create your models here.
-class modUser(AbstractUser):
+class User(AbstractUser):
     pass
-    password = models.CharField(max_length=20, blank=True)
-    firstName = models.CharField(max_length=20, blank=True)
-    lastName = models.CharField(max_length=20, blank=True)
-    address = models.CharField(max_length=72, blank=True)
-    phoneNumber = models.CharField(max_length=10, blank=True)
-    registrationDate = models.DateTimeField(default=datetime.now, blank=True)
-
-
-# might end up inheriting AbstractUser instead
-# might just be a placeholder
-class User(models.Model):
-    # userType = models.CharField(max_length=5)
-    USER_TYPE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('User', 'User')
-    ]
-    MIN_PASSWORD_LENGTH = 5  # arbitrary
-
-    userId = models.AutoField(primary_key=True)
-    userType = models.CharField(max_length=5, choices=USER_TYPE_CHOICES)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=20, validators=[MinLengthValidator(MIN_PASSWORD_LENGTH)])
-    firstName = models.CharField(max_length=30)
-    lastName = models.CharField(max_length=30)
+    userid = models.CharField(max_length=20, unique=True, primary_key=True, default="001")
+    username = models.CharField(max_length=20, unique=True, default="Bob")
+    password = models.CharField(max_length=20, default="Builder")
+    email = models.EmailField(unique=True, default="BobBuilder@gmail.com")
+    firstName = models.CharField(max_length=30, default="Bob")
+    lastName = models.CharField(max_length=30, default="Builder")
+    phoneNumber = models.CharField(max_length=10, default="0000000000")
     shippingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                          related_name="userShippingAddress")
+                                          related_name="userShippingAddress", blank=True)
     billingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                         related_name="userBillingAddress")
-    phoneNum = models.CharField(max_length=10)
-    registrationDate = models.DateTimeField(auto_now_add=True)
+                                         related_name="userBillingAddress", blank=True)
+    registrationDate = models.DateTimeField(default= timezone.now)
 
 
 class Address(models.Model):
