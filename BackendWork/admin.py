@@ -11,7 +11,21 @@ class UserAdmin(UserAdmin):
     add_form = UserCreationForm
     form = UserChangeForm
     model = User
-    list_display = ["email", "username", "password", "firstName", "lastName", "phoneNumber", "registrationDate"]
+    list_display = ["email", "username", "password", "phone_number", "shipping_address", "billing_address"]
+    fieldsets = (
+        *UserAdmin.fieldsets,
+        (
+            'Additional Information',
+            {
+                'fields': (
+                    'phone_number',
+                    'shipping_address',
+                    'billing_address',
+
+                )
+            }
+        )
+    )
 
 
 # Register models here

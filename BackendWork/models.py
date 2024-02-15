@@ -5,19 +5,11 @@ from django.utils import timezone
 
 # Create your models here.
 class User(AbstractUser):
-    pass
-    userid = models.CharField(max_length=20, unique=True, primary_key=True, default="001")
-    username = models.CharField(max_length=20, unique=True, default="Bob")
-    password = models.CharField(max_length=20, default="Builder")
-    email = models.EmailField(unique=True, default="BobBuilder@gmail.com")
-    firstName = models.CharField(max_length=30, default="Bob")
-    lastName = models.CharField(max_length=30, default="Builder")
-    phoneNumber = models.CharField(max_length=10, default="0000000000")
-    shippingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                          related_name="userShippingAddress", blank=True)
-    billingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                         related_name="userBillingAddress", blank=True)
-    registrationDate = models.DateTimeField(default= timezone.now)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
+    shipping_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
+                                            related_name="userShippingAddress", blank=True)
+    billing_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
+                                        related_name="userBillingAddress", blank=True)
 
 
 class Address(models.Model):
@@ -39,7 +31,7 @@ class Address(models.Model):
     addressId = models.AutoField(primary_key=True)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
     line1 = models.CharField(max_length=50)
-    line2 = models.CharField(max_length=50)
+    line2 = models.CharField(max_length=50, blank=True, null=True),
     aptNum = models.CharField(max_length=10, null=True)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=2, choices=STATE_CHOICES)
@@ -163,6 +155,6 @@ class DisputeTicket(models.Model):
     disputeDetails = models.CharField(max_length=1000)
     disputeDate = models.DateTimeField(auto_now_add=True)
     disputeStatus = models.CharField(max_length=20)
-    resolvedBy = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,  related_name="resolvedTickets")
+    resolvedBy = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="resolvedTickets")
     resolutionDetails = models.CharField(max_length=1000)
     resolutionDate = models.DateTimeField()

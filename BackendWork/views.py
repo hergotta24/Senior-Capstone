@@ -3,8 +3,13 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 
-def user_login(request):
-    if request.method == 'POST':
+class UserLoginView(View):
+    @staticmethod
+    def get(request):
+        return render(request, 'login.html')
+
+    @staticmethod
+    def post(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -15,8 +20,6 @@ def user_login(request):
         else:
             # Return an 'invalid login' error message.
             return render(request, 'login.html', {'error': 'Invalid login credentials.'})
-    else:
-        return render(request, 'login.html')
 
 
 class user_registration(View):
