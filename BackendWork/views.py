@@ -21,7 +21,7 @@ class UserLoginView(View):
             return redirect('/')
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+            return render(request, 'login.html', {'error': 'Invalid login credentials.'}, status=401)
 
 
 # accounts/views.py
@@ -40,6 +40,8 @@ class UserRegisterView(View):
         if form.is_valid():
             form.save()
             return redirect('/')
+        else:
+            return render(request, 'register.html', {'error': 'Invalid registration.'}, status=401)
 
 
 class AccountManagementView(View):

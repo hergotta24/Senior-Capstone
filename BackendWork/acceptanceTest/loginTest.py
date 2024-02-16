@@ -1,5 +1,5 @@
 from django.test import TestCase
-from BackendWork.models import modUser
+from BackendWork.models import User
 from django.test import Client
 
 
@@ -12,7 +12,7 @@ class LoginTest(TestCase):
         self.userList = {"Mike": "Mike", "Bob": "Bob"}
 
         for i in self.userList.keys():
-            temp = modUser(username=i, password=i)
+            temp = User(username=i, password=i)
             temp.save()
 
     def testCorrectLogin(self):
@@ -31,15 +31,15 @@ class TestIncorrectLogin(TestCase):
         self.userList = {"Mike": "Mike", "Bob": "Bob"}
 
         for i in self.userList.keys():
-            temp = modUser(username=i, password=i)
+            temp = User(username=i, password=i)
             temp.save()
 
     def test_incorrectPassword(self):
         for i in self.userList.keys():
-            resp = self.client.post("/login/", {"username": i, "password": i}, follow=True)
-            self.assertFalse(resp.status_code != 200, "Test shouldn't pass due to incorrect username.")
+            resp = self.client.post("/login/", {"username": "Mike", "password": "Bob"}, follow=True)
+            self.assertTrue(resp.status_code == 401, "Test shouldn't pass due to incorrect username.")
 
     def test_incorrectUsername(self):
         for i in self.userList.keys():
-            resp = self.client.post("/login/", {"username": i, "password": i}, follow=True)
-            self.assertFalse(resp.status_code != 200, "Test shouldn't pass due to incorrect password.")
+            resp = self.client.post("/login/", {"username": "Low", "password": "Mike"}, follow=True)
+            self.assertTrue(resp.status_code == 401, "Test shouldn't pass due to incorrect password.")
