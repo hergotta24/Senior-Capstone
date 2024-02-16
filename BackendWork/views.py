@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.views import View
+from BackendWork.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.decorators import login_required
 
 
 class UserLoginView(View):
@@ -22,24 +24,42 @@ class UserLoginView(View):
             return render(request, 'login.html', {'error': 'Invalid login credentials.'})
 
 
-class user_registration(View):
+# accounts/views.py
+
+class UserRegisterView(View):
     @staticmethod
+    @login_required(login_url='/login/')
     def get(request):
-        return redirect('/')
+        user = request.user
+        form = UserCreationForm(instance=user)
+        return render(request, 'register.html', {'form': form})
 
     @staticmethod
-    def post(self, request):
-        return redirect('/')
+    def post(request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
 
 
-class user_info_change(View):
+class AccountManagementView(View):
     @staticmethod
+    @login_required(login_url='/login/')
     def get(request):
-        return redirect('/')
+        user = request.user
+        form = UserChangeForm(instance=user)
+        return render(request, 'account_management.html', {'form': form})
 
     @staticmethod
-    def post(self, request):
-        return redirect('/')
+    @login_required(login_url='/login/')
+    def post(request):
+        user = request.user
+        form = UserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+
 
 def home(request):
     return render(request, 'home.html')

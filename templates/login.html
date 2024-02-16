@@ -14,7 +14,7 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-5 text-center">
-                        <form method="post" action="{% url 'user_login' %}">
+                        <form method="post" action="{% url 'UserLoginView' %}">
                             {% csrf_token %}
                             <h3 class="mb-5">Sign in</h3>
 
@@ -33,7 +33,7 @@
                             <p class="text-danger">{{ error }}</p>
                         {% endif %}
                         <hr class="my-4">
-                        <button class="btn btn-primary w-75" type="submit">Register</button>
+                        <a href="/register/" class="btn btn-primary w-75" type="submit">Register</a>
                     </div>
                 </div>
             </div>
