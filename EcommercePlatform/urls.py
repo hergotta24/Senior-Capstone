@@ -20,6 +20,8 @@ from BackendWork.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', UserLoginView.as_view(), name='user_login'),
+    path('login/', UserLoginView.as_view(), name='UserLoginView'),
+    path('register/', UserRegisterView.as_view(), name='UserRegisterView'),
+    path('Account/Manage', AccountManagementView.as_view(), name='UserRegisterView'),
     path('', home, name='home')
 ]
