@@ -9,7 +9,7 @@ from .models import User, Address, Storefront, CustomerReviews, StoreReviews, Pr
 
 class UserAdmin(UserAdmin):
     add_form = UserCreationForm
-    form = UserChangeForm
+
     model = User
     list_display = ["email", "username", "password", "phone_number", "shipping_address", "billing_address"]
     fieldsets = (
