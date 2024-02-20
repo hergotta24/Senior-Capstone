@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,10 +10,10 @@
     document.addEventListener("DOMContentLoaded", function() {
       const btn = document.getElementById('hide');
       const subMenu = document.getElementById('sidebar');
-      const Nav = document.getElementById('list');
+      const content = document.getElementById('content');
       subMenu.style.opacity='0';
       btn.addEventListener('click', () => {
-        if (subMenu.style.opacity=='0') {
+        if (subMenu.style.opacity==='0') {
           subMenu.style.opacity='1';
 
         } else {
@@ -24,46 +23,32 @@
       subMenu.addEventListener('transitioned', () => {
         if (subMenu.classList.contains('d-none')) {
           subMenu.classList.remove('d-none');
+
         } else {
           subMenu.classList.add('d-none');
+
         }
       });
     });
   </script>
 </head>
 <style>
-
-    html, body{height:100%;
-    overflow-x: clip}
-    .main{
-       background: linear-gradient(to bottom right, #878787, #272727);
+    #main {
+        background: linear-gradient(to bottom right, #878787, #272727);
         height:93%;
-        vertical-align: center;
-        place-content: center;
-        align-content:center;
-        display:flex;
     }
     #sidebar{
       top: 0;
-      display:flex;
-      text-align: center;
-      height:100%;
       background-color: #219EC3;
       transition: opacity 0.25s;
-
     }
     #header{
-        display: flex;
-        align-items:center;
-        vertical-align: center;
-        margin:auto;
         height:7%;
         background-color: #219EC3;
 
     }
     a {
       color:#FDFCDC;
-      text-decoration: none;
     }
 
     .hover:hover{
@@ -77,16 +62,6 @@
     i{
         border-radius: 5px;
     }
-    #feed{
-        margin: auto;
-        height:100%;
-        width:100%;
-        display:flex;
-
-    }
-  .col{
-    text-align: center;
-  }
   #searchBtn{
     max-width:50px;
     background:lightgray
@@ -95,8 +70,8 @@
     background:white;
   }
 </style>
-<body>
-<div class="row" id="header">
+<body class="h-100 w-100 overflow-x-hidden">
+<div class="row d-flex align-items-center align-content-center m-auto flex-nowrap" id="header">
     <div class="container col-sm-1">
 
       <button type="button" class="btn" id="hide">
@@ -111,32 +86,56 @@
         <button class="container btn input-group-append" id="searchBtn"><i class="fa fa-search"></i></button>
       </div>
     </div>
-    <div class="container col col-sm-1 offset-sm-1" style="text-align: right">
+    <div class="container col-sm-1 offset-sm-1 d-flex justify-content-end">
         <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
     </div>
-    <div class="container col col-sm-1">
+    <div class="container col-sm-1 justify-content-center d-flex">
       <a href="/cart" ><i class="hover fa fa-shopping-cart fa-2x"></i></a>
     </div>
 </div>
-<div class="row main">
-    <div class="container col-sm-1" id="sidebar">
+<div class="row d-flex align-content-center justify-content-center" id="main">
+    <div class="container col-sm-1 text-center d-flex h-100" id="sidebar">
           <ul class="nav flex-column" id="list" style="margin-left:10px; width: 100%;">
-            <li class=hover>
-              <a href="/home"  style="margin-left:5px"><i class="fa fa-home fa-1x"></i> Home </a>
+            <li class="hover">
+              <a href="/home" class="text-decoration-none" style="margin-left:5px"><i class="fa fa-home fa-1x"></i> Home </a>
             </li>
               <li class="hover">
-                  <a href="/products"> Products </a>
+                  <a href="/products" class="text-decoration-none"> Products </a>
               </li>
               <li class="hover">
-                  <a href="/account"> Account </a>
+                  <a href="/account" class="text-decoration-none"> Account </a>
               </li>
               <li class="hover">
-                  <a href="/followed"> Followed Creators </a>
+                  <a href="/followed" class="text-decoration-none"> Followed Creators </a>
               </li>
           </ul>
     </div>
-    <div class="container col-11" style="display:flex">
-        <div id="feed">
+    <div class="container col d-flex ps-4" id="content">
+        <div class="d-grid m-auto h-100 w-100 align-content-start gap-3 p-3" id="feed">
+            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px;background-color: #AAAAAA" id="recommendations">
+                {% for product in recommendedProd %}
+                    <div class="col-xs-4">
+                    <p>{{ product.name }}</p>
+                    <hr class="w-75 justify-self-center">
+                    <p>{{ product.description }}</p>
+                    <p>{{ product.price }}</p>
+                    </div>
+                {% empty %}
+                    <p> No Recommended Products</p>
+                {% endfor %}
+            </div>
+            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px;background-color: #AAAAAA" id="recommendations">
+                {% for product in saved %}
+                    <div class="col-xs-4">
+                    <p>{{ product.name }}</p>
+                    <hr class="w-75 justify-self-center">
+                    <p>{{ product.description }}</p>
+                    <p>{{ product.price }}</p>
+                    </div>
+                {% empty %}
+                    <p> No Saved Products</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
