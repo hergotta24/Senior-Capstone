@@ -67,9 +67,15 @@
         <label class="input-group-text" for="searchbar">Search</label><input type="search" id="searchbar" style="width:70%">
             <button class="btn input-group-append"><i class="fa fa-search"></i></button>
     </div>
-    <div class="col" style="text-align: right">
-        <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="col" style="text-align: right">
+            <a href="/logout" class="btn btn-dark btn-sm" id="loginBtn">Logout</a>
+        </div>
+    {% else %}
+        <div class="col" style="text-align: right">
+            <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
+        </div>
+    {% endif %}
 </div>
 <div class="row flex-fill main">
     <div class="container col-sm-1" id="sidebar">

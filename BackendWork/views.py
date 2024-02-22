@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm
@@ -93,3 +93,7 @@ class AccountManagementView(View):
 
 def home(request):
     return render(request, 'home.html')
+
+def custom_logout(request):
+    logout(request)
+    return redirect('/')
