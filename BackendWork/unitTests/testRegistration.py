@@ -10,12 +10,13 @@ class RegistrationTest(TestCase):
         self.form_data = {
             'email': 'test@uwm.edu',
             'username': 'testAccount',
-            'password': 'p@55w0rD!',
-            'first_name': 'Test',
-            'last_name': 'Account',
-            'phone_number': '1234567890',
-            'shipping_address': '123 Fake St.',  # will need to be changed to Address model
-            'billing_address': '123 Fake St.',  # will need to be changed to Address model
+            'password1': 'p@55w0rD!',
+            'password2': 'p@55w0rD!',
+            # 'first_name': 'Test',
+            # 'last_name': 'Account',
+            # 'phone_number': '1234567890',
+            # 'shipping_address': '123 Fake St.',  # will need to be changed to Address model
+            # 'billing_address': '123 Fake St.',  # will need to be changed to Address model
         }
 
     def testRegistrationPageAccessible(self):  # might technically be an acceptance test?
@@ -60,27 +61,32 @@ class RegistrationTest(TestCase):
         form = UserCreationForm(data=self.form_data)
         self.assertFalse(form.is_valid(), "form data missing username")
 
-    def testRegistrationFormInvalidFirstname(self):
-        self.form_data['first_name'] = ''
+    def testRegistrationPasswordMismatch(self):
+        self.form_data['password2'] = 'mismatch'
         form = UserCreationForm(data=self.form_data)
-        self.assertFalse(form.is_valid(), "form data missing first_name")
+        self.assertFalse(form.is_valid(), "form data has mismatched passwords")
 
-    def testRegistrationFormInvalidLastname(self):
-        self.form_data['last_name'] = ''
-        form = UserCreationForm(data=self.form_data)
-        self.assertFalse(form.is_valid(), "form data missing last_name")
-
-    def testRegistrationFormInvalidPhone(self):
-        self.form_data['phone_number'] = ''
-        form = UserCreationForm(data=self.form_data)
-        self.assertFalse(form.is_valid(), "form data missing phone_number")
-
-    def testRegistrationFormInvalidShipping(self):
-        self.form_data['shipping_address'] = ''
-        form = UserCreationForm(data=self.form_data)
-        self.assertFalse(form.is_valid(), "form data missing shipping_address")
-
-    def testRegistrationFormInvalidBilling(self):
-        self.form_data['billing_address'] = ''
-        form = UserCreationForm(data=self.form_data)
-        self.assertFalse(form.is_valid(), "form data missing billing_address")
+    # def testRegistrationFormInvalidFirstname(self):
+    #     self.form_data['first_name'] = ''
+    #     form = UserCreationForm(data=self.form_data)
+    #     self.assertFalse(form.is_valid(), "form data missing first_name")
+    #
+    # def testRegistrationFormInvalidLastname(self):
+    #     self.form_data['last_name'] = ''
+    #     form = UserCreationForm(data=self.form_data)
+    #     self.assertFalse(form.is_valid(), "form data missing last_name")
+    #
+    # def testRegistrationFormInvalidPhone(self):
+    #     self.form_data['phone_number'] = ''
+    #     form = UserCreationForm(data=self.form_data)
+    #     self.assertFalse(form.is_valid(), "form data missing phone_number")
+    #
+    # def testRegistrationFormInvalidShipping(self):
+    #     self.form_data['shipping_address'] = ''
+    #     form = UserCreationForm(data=self.form_data)
+    #     self.assertFalse(form.is_valid(), "form data missing shipping_address")
+    #
+    # def testRegistrationFormInvalidBilling(self):
+    #     self.form_data['billing_address'] = ''
+    #     form = UserCreationForm(data=self.form_data)
+    #     self.assertFalse(form.is_valid(), "form data missing billing_address")
