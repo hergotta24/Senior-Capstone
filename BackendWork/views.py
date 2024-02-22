@@ -32,8 +32,6 @@ class UserLoginView(View):
 class UserRegisterView(View):
     @staticmethod
     def get(request):
-        user = request.user
-        form = UserCreationForm(instance=user)
         return render(request, 'register.html')
 
     @staticmethod
@@ -48,15 +46,15 @@ class UserRegisterView(View):
             'email': email,
             'username': username,
             'password1': password1,
-            'password2': password1,  # Assuming you want both password fields to have the same value
+            'password2': password2,  # Assuming you want both password fields to have the same value
         }
 
         form = UserCreationForm(form_data)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return JsonResponse({'message': 'Account Registered! Redirecting you to login to sign in...'}, status=200)
         else:
-            return JsonResponse({'error': form.errors}, status=400)
+            return JsonResponse({'message': form.errors}, status=400)
 
 
 class AccountManagementView(View):
