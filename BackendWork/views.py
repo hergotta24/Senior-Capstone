@@ -62,7 +62,6 @@ class AccountManagementView(View):
     @login_required(login_url='/login/')
     def get(request):
         user = request.user
-
         form = UserChangeForm(instance=user)
         return render(request, 'account_management.html', {'form': form})
 
@@ -75,10 +74,8 @@ class AccountManagementView(View):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         phone_number = data.get('phone_number')
-
         # Fetch the user instance you want to update
         user = User.objects.get(username=username)
-
         # Construct the form instance with the user instance and the updated data
         user.first_name = first_name
         user.last_name = last_name
@@ -86,7 +83,7 @@ class AccountManagementView(View):
 
         user.save()
 
-        return redirect('/')
+        return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
 
 
 def home(request):

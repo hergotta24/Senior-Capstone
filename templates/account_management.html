@@ -4,48 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
+    <title>Logo? Name?</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- Include your custom CSS file -->
 </head>
-<body class="test">
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title text-center">User Management </h2>
-                        <form id="updateAccountForm" method="POST">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{ user.username }}">
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ user.email }}">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" value="{{ user.first_name }}">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="last_name" name="first_name" placeholder="Last Name" value="{{ user.last_name }}">
-                            </div>
-                            <div class="form-group">
-                                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Phone Number" value="{{ user.phone_number }}">
-                            </div>
-                            <!-- Add more input fields as needed -->
-                            <button type="submit" class="btn btn-primary btn-block">Update</button>
-                        </form>
-                    </div>
-                </div>
+<body class="bg-dark">
+{% include 'shared/toast.html' %}
+<div class="container mt-5">
+    <div class="row justify-content-center mt-5">
+        <h2 class="primary-color text-center my-5">User Management </h2>
+        <form id="updateAccountForm" class="d-flex flex-wrap mt-2" method="POST">
+            <div class="col-12 col-md-6 d-flex flex-wrap form-outline mb-4 px-2">
+                <label class="col-12 form-label float-end primary-color ms-1 mb-0" for="username">Username</label>
+                <input type="text" class="col-12 form-control form-control-lg login-input" id="username" name="username"
+                       placeholder="Username"
+                       value="{{ user.username }}">
             </div>
-        </div>
+            <div class="col-12 col-md-6 d-flex flex-wrap form-outline mb-4 px-2">
+                <label class="col-12 form-label float-end primary-color ms-1 mb-0" for="email">Email</label>
+                <input type="email" class="col-12 form-control form-control-lg login-input" id="email" name="email"
+                       value="{{ user.email }}">
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-wrap form-outline mb-4 px-2">
+                <label class="col-12 form-label float-end primary-color ms-1 mb-0" for="first_name">First Name</label>
+                <input type="text" class="col-12 form-control form-control-lg login-input" id="first_name"
+                       name="first_name"
+                       placeholder="First Name" value="{{ user.first_name }}">
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-wrap form-outline mb-4 px-2">
+                <label class="col-12 form-label float-end primary-color ms-1 mb-0" for="Last Name">Last Name</label>
+                <input type="text" class="col-12 form-control form-control-lg login-input" id="last_name"
+                       name="first_name" value="{{ user.last_name }}">
+            </div>
+            <div class="col-12 col-md-6 d-flex flex-wrap form-outline mb-4 px-2">
+                <label class="col-12 form-label float-end primary-color ms-1 mb-0" for="phone_number">Phone
+                    Number</label>
+                {% if user.phone_number %}
+                    <input type="tel" class="col-12 form-control form-control-lg login-input" id="phone_number"
+                           name="phone_number"
+                           placeholder="Phone Number" value="{{ user.phone_number }}">
+                {% else %}
+                    <input type="tel" class="col-12 form-control form-control-lg login-input" id="phone_number"
+                           name="phone_number"
+                           placeholder="Phone Number">
+                {% endif %}
+            </div>
+            <div class="col-12 justify-content-center d-flex flex-wrap form-outline mb-4 px-2">
+                <button type="submit" class="col-12 w-25 btn btn-primary btn-block">Update</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Bootstrap JS and Custom JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{% static 'js/accountmanagement.js' %}"></script> <!-- Include your custom JavaScript file -->
+<!-- Bootstrap JS and Custom JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="{% static 'js/accountmanagement.js' %}"></script> <!-- Include your custom JavaScript file -->
 </body>
 </html>

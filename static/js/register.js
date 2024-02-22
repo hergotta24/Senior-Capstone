@@ -35,7 +35,7 @@ document.getElementById('registrationForm').addEventListener('submit', function 
         })
         .catch(error => {
             console.error('Error:', error);
-            let errorMessage = typeof error.message === 'object' ? Object.values(error.message).join(", ") : error.message;
+            let errorMessage = typeof error.message === 'object' ? Object.values(error.message).join(" ") : error.message;
             makeToast(errorMessage, 400);
         });
 });
