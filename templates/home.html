@@ -1,45 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Homepage</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const btn = document.getElementById('hide');
+      const subMenu = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      subMenu.style.opacity='0';
+      btn.addEventListener('click', () => {
+        if (subMenu.style.opacity==='0') {
+          subMenu.style.opacity='1';
+
+        } else {
+          subMenu.style.opacity='0';
+        }
+      });
+      subMenu.addEventListener('transitioned', () => {
+        if (subMenu.classList.contains('d-none')) {
+          subMenu.classList.remove('d-none');
+
+        } else {
+          subMenu.classList.add('d-none');
+
+        }
+      });
+    });
+  </script>
 </head>
 <style>
-    html, body{height:100%;
-    overflow-x: clip}
-    .main{
+    #main {
+        background: linear-gradient(to bottom right, #878787, #272727);
         height:93%;
-        vertical-align: center;
-        place-content: center;
-        align-content:center;
     }
     #sidebar{
-        display:flex;
-        padding-left: 5px;
-        text-align: center;
-        margin:auto;
-        height:100%;
-        background-color: #0081a7;
+      top: 0;
+      background-color: #219EC3;
+      transition: opacity 0.25s;
     }
     #header{
-        display: flex;
-        align-items:center;
-        vertical-align: center;
-        margin:auto;
         height:7%;
-        background-color: #0081a7;
+        background-color: #219EC3;
 
     }
     a {
-        color:#FDFCDC;
+      color:#FDFCDC;
     }
 
     .hover:hover{
-        background-color:#31A5C7;
-        transition-duration: 1s;
+        background-color:#5EBEDB;
+        transition-duration: 0.5s;
     }
     li{
         border-radius:5px;
@@ -48,45 +62,81 @@
     i{
         border-radius: 5px;
     }
-    #feed{
-        background-color: #e8e8e8;
-        margin: auto;
-        height:100%;
-        width:100%;
-        display:flex;
-        padding-left:5px;
-
-    }
+  #searchBtn{
+    max-width:50px;
+    background:lightgray
+  }
+  #searchBtn:hover{
+    background:white;
+  }
 </style>
-<body>
-<div class="row" id="header">
-    <div class="col">
-        <a href="/home" ><i class="hover fa fa-home fa-2x"></i></a>
+<body class="h-100 w-100 overflow-x-hidden">
+<div class="row d-flex align-items-center align-content-center m-auto flex-nowrap" id="header">
+    <div class="container col-sm-1">
+
+      <button type="button" class="btn" id="hide">
+          <i class="fa fa-bars"></i>
+        </button>
     </div>
-    <div class="col input-group">
-        <label class="input-group-text" for="searchbar">Search</label><input type="search" id="searchbar" style="width:70%">
-            <button class="btn input-group-append"><i class="fa fa-search"></i></button>
+  <div class="col-sm-1"></div>
+    <div class="container col-sm-6">
+      <div class="input-group mx-auto w-100" id="searchbar">
+        <label class="input-group-text" for="search" style="min-width:60px; width:9%">Search</label>
+        <input type="search" id="search" style="width: 70%;">
+        <button class="container btn input-group-append" id="searchBtn"><i class="fa fa-search"></i></button>
+      </div>
     </div>
-    <div class="col" style="text-align: right">
+    <div class="container col-sm-1 offset-sm-1 d-flex justify-content-end">
         <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
     </div>
-</div>
-<div class="row flex-fill main">
-    <div class="container col-sm-1" id="sidebar">
-        <ul class="nav flex-column">
-            <li class="hover">
-                <a href="/products"> Products </a>
-            </li>
-            <li class="hover">
-                <a href="/account"> Account </a>
-            </li>
-            <li class="hover">
-                <a href="/followed"> Followed Creators </a>
-            </li>
-        </ul>
+    <div class="container col-sm-1 justify-content-center d-flex">
+      <a href="/cart" ><i class="hover fa fa-shopping-cart fa-2x"></i></a>
     </div>
-    <div class="container col-sm-11" style="display:flex">
-        <div id="feed"></div>
+</div>
+<div class="row d-flex align-content-center justify-content-center" id="main">
+    <div class="container col-sm-1 text-center d-flex h-100" id="sidebar">
+          <ul class="nav flex-column" id="list" style="margin-left:10px; width: 100%;">
+            <li class="hover">
+              <a href="/home" class="text-decoration-none" style="margin-left:5px"><i class="fa fa-home fa-1x"></i> Home </a>
+            </li>
+              <li class="hover">
+                  <a href="/products" class="text-decoration-none"> Products </a>
+              </li>
+              <li class="hover">
+                  <a href="/account" class="text-decoration-none"> Account </a>
+              </li>
+              <li class="hover">
+                  <a href="/followed" class="text-decoration-none"> Followed Creators </a>
+              </li>
+          </ul>
+    </div>
+    <div class="container col d-flex ps-4" id="content">
+        <div class="d-grid m-auto h-100 w-100 align-content-start gap-3 p-3" id="feed">
+            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px;background-color: #AAAAAA" id="recommendations">
+                {% for product in recommendedProd %}
+                    <div class="col-xs-4">
+                    <p>{{ product.name }}</p>
+                    <hr class="w-75 justify-self-center">
+                    <p>{{ product.description }}</p>
+                    <p>{{ product.price }}</p>
+                    </div>
+                {% empty %}
+                    <p> No Recommended Products</p>
+                {% endfor %}
+            </div>
+            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px;background-color: #AAAAAA" id="recommendations">
+                {% for product in saved %}
+                    <div class="col-xs-4">
+                    <p>{{ product.name }}</p>
+                    <hr class="w-75 justify-self-center">
+                    <p>{{ product.description }}</p>
+                    <p>{{ product.price }}</p>
+                    </div>
+                {% empty %}
+                    <p> No Saved Products</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 </body>
