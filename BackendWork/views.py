@@ -54,7 +54,7 @@ class UserRegisterView(View):
             form.save()
             return JsonResponse({'message': 'Account Registered! Redirecting you to login to sign in...'}, status=200)
         else:
-            return JsonResponse({'message': form.errors}, status=400)
+            return JsonResponse({'message': form.errors}, status=401)
 
 
 class AccountManagementView(View):
