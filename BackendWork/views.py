@@ -74,13 +74,18 @@ class AccountManagementView(View):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         phone_number = data.get('phone_number')
-        # Fetch the user instance you want to update
-        user = User.objects.get(username=username)
-        # Construct the form instance with the user instance and the updated data
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
+
+        if user != request.user:
+            return JsonResponse({'error': 'You are not authorized to update this user'}, status=403)
+
         user.first_name = first_name
         user.last_name = last_name
         user.phone_number = phone_number
-
         user.save()
 
         return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
