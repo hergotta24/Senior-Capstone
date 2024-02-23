@@ -32,8 +32,6 @@ class UserLoginView(View):
 class UserRegisterView(View):
     @staticmethod
     def get(request):
-        user = request.user
-        form = UserCreationForm(instance=user)
         return render(request, 'register.html')
 
     @staticmethod
@@ -48,15 +46,15 @@ class UserRegisterView(View):
             'email': email,
             'username': username,
             'password1': password1,
-            'password2': password1,  # Assuming you want both password fields to have the same value
+            'password2': password2,  # Assuming you want both password fields to have the same value
         }
 
         form = UserCreationForm(form_data)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return JsonResponse({'message': 'Account Registered! Redirecting you to login to sign in...'}, status=200)
         else:
-            return JsonResponse({'error': form.errors}, status=400)
+            return JsonResponse({'message': form.errors}, status=400)
 
 
 class AccountManagementView(View):
@@ -64,7 +62,6 @@ class AccountManagementView(View):
     @login_required(login_url='/login/')
     def get(request):
         user = request.user
-
         form = UserChangeForm(instance=user)
         return render(request, 'account_management.html', {'form': form})
 
@@ -77,10 +74,8 @@ class AccountManagementView(View):
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         phone_number = data.get('phone_number')
-
         # Fetch the user instance you want to update
         user = User.objects.get(username=username)
-
         # Construct the form instance with the user instance and the updated data
         user.first_name = first_name
         user.last_name = last_name
@@ -88,7 +83,7 @@ class AccountManagementView(View):
 
         user.save()
 
-        return redirect('/')
+        return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
 
 
 def home(request):
