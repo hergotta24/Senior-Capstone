@@ -94,6 +94,7 @@ class AccountManagementView(View):
 def home(request):
     return render(request, 'home.html')
 
+
 def custom_logout(request):
     logout(request)
     return redirect('/')
