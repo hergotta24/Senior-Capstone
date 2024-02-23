@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm
@@ -24,7 +24,7 @@ class UserLoginView(View):
             return redirect('/')
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+            return render(request, 'login.html', {'error': 'Invalid login credentials.'}, status=401)
 
 
 # accounts/views.py
@@ -93,3 +93,8 @@ class AccountManagementView(View):
 
 def home(request):
     return render(request, 'home.html')
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect('/')

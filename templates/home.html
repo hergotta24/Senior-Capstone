@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -86,12 +86,15 @@
         <button class="container btn input-group-append" id="searchBtn"><i class="fa fa-search"></i></button>
       </div>
     </div>
-    <div class="container col-sm-1 offset-sm-1 d-flex justify-content-end">
-        <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
-    </div>
-    <div class="container col-sm-1 justify-content-center d-flex">
-      <a href="/cart" ><i class="hover fa fa-shopping-cart fa-2x"></i></a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="col" style="text-align: right">
+            <a href="/logout" class="btn btn-dark btn-sm" id="loginBtn">Logout</a>
+        </div>
+    {% else %}
+        <div class="col" style="text-align: right">
+            <a href="/login" class="btn btn-dark btn-sm" id="loginBtn">Login</a>
+        </div>
+    {% endif %}
 </div>
 <div class="row d-flex align-content-center justify-content-center" id="main">
     <div class="container col-sm-1 text-center d-flex h-100" id="sidebar">
