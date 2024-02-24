@@ -1,0 +1,37 @@
+.login-input{
+    background-color: transparent!important;
+    color: #e3d7c9 !important;
+    border: solid 3px #e3d7c9;
+}
+
+.primary-color{
+    color: #e3d7c9;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #212529 inset !important;
+}
+input:-webkit-autofill{
+    -webkit-text-fill-color: #e3d7c9 !important;
+}
+
+/*START-------bootstrap-override-------------------------------------------------------------------------*/
+.btn-primary{
+    background-color: transparent;
+    color: #e3d7c9;
+    border-color: #e3d7c9;
+}
+
+.btn:hover {
+    background-color: #e3d7c9;
+    color: #2C2C2C;
+    border-color: #e3d7c9;
+}
+
+/*END---------bootstrap override-------------------------------------------------------------------------*/
+input:-webkit-autofill {
+  background-color: transparent!important;
+}

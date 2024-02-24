@@ -1,43 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.core.validators import MinLengthValidator
-
-from datetime import datetime
+from django.utils import timezone
 
 
 # Create your models here.
-class modUser(AbstractUser):
-    pass
-    password = models.CharField(max_length=20, blank=True)
-    firstName = models.CharField(max_length=20, blank=True)
-    lastName = models.CharField(max_length=20, blank=True)
-    address = models.CharField(max_length=72, blank=True)
-    phoneNumber = models.CharField(max_length=10, blank=True)
-    registrationDate = models.DateTimeField(default=datetime.now, blank=True)
-
-
-# might end up inheriting AbstractUser instead
-# might just be a placeholder
-class User(models.Model):
-    # userType = models.CharField(max_length=5)
-    USER_TYPE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('User', 'User')
-    ]
-    MIN_PASSWORD_LENGTH = 5  # arbitrary
-
-    userId = models.AutoField(primary_key=True)
-    userType = models.CharField(max_length=5, choices=USER_TYPE_CHOICES)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=20, validators=[MinLengthValidator(MIN_PASSWORD_LENGTH)])
-    firstName = models.CharField(max_length=30)
-    lastName = models.CharField(max_length=30)
-    shippingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                          related_name="userShippingAddress")
-    billingAddressId = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                         related_name="userBillingAddress")
-    phoneNum = models.CharField(max_length=10)
-    registrationDate = models.DateTimeField(auto_now_add=True)
+class User(AbstractUser):
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
+    shipping_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
+                                            related_name="userShippingAddress", blank=True)
+    billing_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
+                                        related_name="userBillingAddress", blank=True)
 
 
 class Address(models.Model):
@@ -59,7 +31,7 @@ class Address(models.Model):
     addressId = models.AutoField(primary_key=True)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
     line1 = models.CharField(max_length=50)
-    line2 = models.CharField(max_length=50)
+    line2 = models.CharField(max_length=50, blank=True, null=True),
     aptNum = models.CharField(max_length=10, null=True)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=2, choices=STATE_CHOICES)
@@ -183,6 +155,6 @@ class DisputeTicket(models.Model):
     disputeDetails = models.CharField(max_length=1000)
     disputeDate = models.DateTimeField(auto_now_add=True)
     disputeStatus = models.CharField(max_length=20)
-    resolvedBy = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,  related_name="resolvedTickets")
+    resolvedBy = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="resolvedTickets")
     resolutionDetails = models.CharField(max_length=1000)
     resolutionDate = models.DateTimeField()
