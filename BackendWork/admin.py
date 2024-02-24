@@ -2,15 +2,45 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import modUserCreationForm, modUserChangeForm
-from .models import modUser
+from .forms import UserCreationForm, UserChangeForm
+from .models import User, Address, Storefront, CustomerReviews, StoreReviews, Product, Category, SubCategory, \
+    ProductVideos, ProductImages, ProductQuestions, ProductReviews, Invoice, LineItem, DisputeTicket
 
 
-class modUserAdmin(UserAdmin):
-    add_form = modUserCreationForm
-    form = modUserChangeForm
-    model = modUser
-    list_display = ["email", "username", ]
+class UserAdmin(UserAdmin):
+    add_form = UserCreationForm
+
+    model = User
+    list_display = ["email", "username", "password", "phone_number", "shipping_address", "billing_address"]
+    fieldsets = (
+        *UserAdmin.fieldsets,
+        (
+            'Additional Information',
+            {
+                'fields': (
+                    'phone_number',
+                    'shipping_address',
+                    'billing_address',
+
+                )
+            }
+        )
+    )
 
 
-admin.site.register(modUser, modUserAdmin)
+# Register models here
+admin.site.register(User, UserAdmin)
+admin.site.register(Address)
+admin.site.register(Storefront)
+admin.site.register(CustomerReviews)
+admin.site.register(StoreReviews)
+admin.site.register(Product)
+admin.site.register(Category)
+admin.site.register(SubCategory)
+admin.site.register(ProductVideos)
+admin.site.register(ProductImages)
+admin.site.register(ProductQuestions)
+admin.site.register(ProductReviews)
+admin.site.register(Invoice)
+admin.site.register(LineItem)
+admin.site.register(DisputeTicket)
