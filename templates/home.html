@@ -10,17 +10,20 @@
     <title>Homepage</title>
 </head>
 <style>
+    html, body {
+        height:100%;
+    }
     #main {
         background: #212529;
-        height: 91%;
     }
 
     #sidebar {
         background-color: #161718;
     }
-
     #header {
-        height: 9%;
+        z-index: 1;
+        top: 0;
+        max-height: 55px;
         background-color: #161718;
     }
 
@@ -70,16 +73,16 @@
         color: #E8DCCD;
     }
 </style>
-<body class="h-100 w-100 overflow-x-hidden">
-<div class="row col-sm-12 d-flex align-items-center align-content-center m-auto flex-nowrap" id="header">
-    <div class="container col-lg-1 col-sm-1">
+<body class="d-grid w-100 overflow-x-hidden">
+<div class="row d-flex flex-nowrap align-items-center align-content-center py-2 ps-0 mx-auto w-100 position-fixed" id="header">
+    <div class=" col-lg-1 col-sm-1">
         <button type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false" aria-controls="sidebarContent" class="btn btn-sm hover" >
             <i class="fa fa-bars fa-md"></i>
         </button>
     </div>
     <div class="col-lg-1"></div>
-    <div class="container col-lg-6 offset-lg-1 col-sm-2">
-        <div class="input-group mx-auto w-100 border-solid border-2" id="searchbar" style="border-color:#E8DCCD;">
+    <div class="col-lg-6 offset-lg-1 col-sm-2">
+        <div class="input-group mx-auto w-100 border-solid border-2" id="searchbar" style="border-color:#E8DCCD">
             <input class="form-control ps-3 rounded-start-pill" type="search" id="search" placeholder="Search"
                    aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">
@@ -87,7 +90,7 @@
             </div>
         </div>
     </div>
-    <div class="container col-lg-1 col-sm-1 offset-lg-2 d-flex justify-content-end">
+    <div class="col-lg-1 col-sm-1 offset-lg-2 d-flex justify-content-end">
         <div class="col">
             {% if user.is_authenticated %}
                 <a href="/logout" class="btn btn-dark btn-sm d-inline" id="loginBtn">Logout</a>
@@ -102,10 +105,10 @@
     </div>
 
 </div>
-<div class="row d-flex align-content-center justify-content-center" id="main">
-    <div class="col-auto d-flex h-100 p-1" id="sidebar">
-        <div class="collapse collapse-horizontal show" id="sidebarContent" style="width: 200px;">
-            <ul class="nav flex-column" id="list" style="margin-left:10px; width: 100%;">
+<div class="row d-flex h-100 pt-5" id="main">
+    <div class="nav col-auto d-flex h-100 pt-1" id="sidebar">
+        <div class="collapse collapse-horizontal show ps-1" id="sidebarContent" >
+            <ul class="nav flex-column w-100 sticky-top" id="list" style="top: 55px;margin-left:10px; width: 100%;">
                 <li class="hover">
                     <a href="#"><i class="fa fa-home"></i> Home </a>
                 </li>
@@ -127,7 +130,7 @@
             </ul>
         </div>
     </div>
-    <div class="col d-flex ps-4" id="content">
+    <div class="col d-flex ps-4 h-100 w-100 pt-1" id="content">
         <div class="d-grid m-auto h-100 w-100 align-content-start gap-3 p-3" id="feed">
             <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px"
                  id="recommendations">
@@ -139,7 +142,7 @@
                         <p>{{ product.price }}</p>
                     </div>
                 {% empty %}
-                    <p> No Recommended Products</p>
+                    <p style="color:white"> No Recommended Products</p>
                 {% endfor %}
             </div>
             <hr>
@@ -147,16 +150,16 @@
                  id="recommendations">
                 {% for product in saved %}
                     <div class="col-xs-4">
-                        <p>{{ product.name }}</p>
+                        <p> {{ product.name }} </p>
                         <hr class="w-75 justify-self-center">
-                        <p>{{ product.description }}</p>
-                        <p>{{ product.price }}</p>
+                        <p> {{ product.description }} </p>
+                        <p> {{ product.price }} </p>
                     </div>
                 {% empty %}
                     <p> No Saved Products</p>
                 {% endfor %}
             </div>
-            <hr>
+            <hr style="margin-bottom: 1000px">
         </div>
     </div>
 </div>
