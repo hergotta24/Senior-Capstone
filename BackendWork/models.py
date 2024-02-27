@@ -5,6 +5,7 @@ from django.utils import timezone
 
 # Create your models here.
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     shipping_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
                                             related_name="userShippingAddress", blank=True)
