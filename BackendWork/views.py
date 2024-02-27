@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import User
+from BackendWork.models import *
 
 
 class UserLoginView(View):
@@ -98,3 +98,7 @@ def home(request):
 def custom_logout(request):
     logout(request)
     return redirect('/')
+
+
+def deleteProduct(request):
+    Product.objects.filter(id=request).delete() # no idea if this works, nor if id should equal request
