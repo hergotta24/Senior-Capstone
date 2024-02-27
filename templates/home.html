@@ -12,9 +12,12 @@
 <style>
     html, body {
         height:100%;
+        width: 100%;
     }
     #main {
         background: #212529;
+        margin: 0;
+        left: 0;
     }
 
     #sidebar {
@@ -74,7 +77,7 @@
     }
 </style>
 <body class="d-grid w-100 overflow-x-hidden">
-<div class="row d-flex flex-nowrap align-items-center align-content-center py-2 ps-0 mx-auto w-100 position-fixed" id="header">
+<div class="row d-flex flex-nowrap align-items-center align-content-center py-3 ps-0 mx-auto w-100 position-fixed" id="header">
     <div class=" col-lg-1 col-sm-1">
         <button type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false" aria-controls="sidebarContent" class="btn btn-sm hover" >
             <i class="fa fa-bars fa-md"></i>
@@ -106,9 +109,9 @@
 
 </div>
 <div class="row d-flex h-100 pt-5" id="main">
-    <div class="nav col-auto d-flex h-100 pt-1" id="sidebar">
-        <div class="collapse collapse-horizontal show ps-1" id="sidebarContent" >
-            <ul class="nav flex-column w-100 sticky-top" id="list" style="top: 55px;margin-left:10px; width: 100%;">
+    <div class="col-auto d-flex h-100 px-0" id="sidebar">
+        <div class="collapse collapse-horizontal show" id="sidebarContent" >
+            <ul class="nav flex-column w-100 sticky-top" style="top:55px;" id="list">
                 <li class="hover">
                     <a href="#"><i class="fa fa-home"></i> Home </a>
                 </li>
@@ -124,13 +127,13 @@
                     <hr class="border-0 w-75 align-self-center m-3" style="background-color: #E8DCCD; height:3px;">
                     <h6 class="ps-3" style="color:#E8DCCD"> Storefront </h6>
                     <li class="hover">
-                        <a href="/products"><i class="fa fa-shop"></i> Manage </a>
+                        <a href="/storefront"><i class="fa fa-shop"></i> Manage </a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </div>
-    <div class="col d-flex ps-4 h-100 w-100 pt-1" id="content">
+    <div class="col d-flex flex-column overflow-x-hidden h-100 w-100 p-4" id="content">
         <div class="d-grid m-auto h-100 w-100 align-content-start gap-3 p-3" id="feed">
             <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px"
                  id="recommendations">
@@ -159,9 +162,9 @@
                     <p> No Saved Products</p>
                 {% endfor %}
             </div>
-            <hr style="margin-bottom: 1000px">
+            <hr>
         </div>
-    </div>
+    </div> <!-- No content outside this div -->
 </div>
 </body>
 </html>
