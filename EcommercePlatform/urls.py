@@ -21,10 +21,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('login/', UserLoginView.as_view(), name='UserLoginView'),
-                  path('register/', UserRegisterView.as_view(), name='UserRegisterView'),
-                  path('logout/', custom_logout, name='Logout'),
-                  path('account/', AccountManagementView.as_view(), name='AccountManagementView'),
-                  path('', home, name='home')
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', admin.site.urls),
+    path('login/', UserLoginView.as_view(), name='UserLoginView'),
+    path('register/', UserRegisterView.as_view(), name='UserRegisterView'),
+    path('logout/', custom_logout, name='Logout'),
+    path('account/', AccountManagementView.as_view(), name='AccountManagementView'),
+    path('storefront/', storefront, name='storefront'),
+    path('createproduct/', createproduct, name='createproduct'),
+
+    path('', home, name='home')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

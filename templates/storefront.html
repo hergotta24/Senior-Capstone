@@ -7,13 +7,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Homepage</title>
+    <title>Storefront</title>
 </head>
 <style>
     html, body {
-        height:100%;
+        height: 100%;
         width: 100%;
     }
+
     #main {
         background: #212529;
         margin: 0;
@@ -23,6 +24,7 @@
     #sidebar {
         background-color: #161718;
     }
+
     #header {
         z-index: 1;
         top: 0;
@@ -51,7 +53,7 @@
     #searchBtn {
         max-width: 50px;
         background: #212529;
-        border-color: #E8DCCD;;
+        border-color: #E8DCCD;
     }
 
     #search {
@@ -65,6 +67,10 @@
         opacity: 70%;
     }
 
+    #logoutBtn, #loginBtn, #createBtn {
+        color: #E8DCCD;
+    }
+
     hr {
         height: 10px;
         background-color: #161718;
@@ -72,14 +78,37 @@
         opacity: 0.75;
     }
 
-    i {
-        color: #E8DCCD;
+    i, h3, td, .btn {
+        color: #E8DCCD !important;
     }
+
+
+    #banner {
+    {% if store.bannerURL == None %}
+        background-color: gray;
+    {% else %}
+        background-image: url('{{ store.bannerURL }}');
+    {% endif %}
+    }
+
+    #logo {
+    {% if store.bannerURL == None %}
+        background-color: dimgray;
+    {% else %}
+        background-image: url('{{ store.logoURL }}');
+    {% endif %}
+    }
+    #logo:hover {
+        opacity:50%;
+    }
+
 </style>
 <body class="d-grid w-100 overflow-x-hidden">
-<div class="row d-flex flex-nowrap align-items-center align-content-center py-3 ps-0 mx-auto w-100 position-fixed" id="header">
+<div class="row d-flex flex-nowrap align-items-center align-content-center py-3 ps-0 mx-auto w-100 position-fixed"
+     id="header">
     <div class=" col-lg-1 col-sm-1">
-        <button type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false" aria-controls="sidebarContent" class="btn btn-sm hover" >
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false"
+                aria-controls="sidebarContent" class="btn btn-sm hover">
             <i class="fa fa-bars fa-md"></i>
         </button>
     </div>
@@ -96,7 +125,7 @@
     <div class="col-lg-1 col-sm-1 offset-lg-2 d-flex justify-content-end">
         <div class="col">
             {% if user.is_authenticated %}
-                <a href="/logout" class="btn btn-dark btn-sm d-inline" id="loginBtn">Logout</a>
+                <a href="/logout" class="btn btn-dark btn-sm d-inline" id="logoutBtn">Logout</a>
             {% else %}
                 <a href="/login" class="btn btn-dark btn-sm d-inline" id="loginBtn">Login</a>
             {% endif %}
@@ -108,9 +137,9 @@
     </div>
 
 </div>
-<div class="row d-flex h-100 pt-5" id="main">
+<div class="row d-flex w-100 h-100 pt-5" id="main">
     <div class="col-auto d-flex h-100 px-0" id="sidebar">
-        <div class="collapse collapse-horizontal show" id="sidebarContent" >
+        <div class="collapse collapse-horizontal show" id="sidebarContent">
             <ul class="nav flex-column w-100 sticky-top" style="top:55px;" id="list">
                 <li class="hover">
                     <a href="#"><i class="fa fa-home"></i> Home </a>
@@ -126,45 +155,66 @@
                     </li>
                     <hr class="border-0 w-75 align-self-center m-3" style="background-color: #E8DCCD; height:3px;">
                     <h6 class="ps-3" style="color:#E8DCCD"> Storefront </h6>
-                    <li class="hover">
-                        <a href="/storefront"><i class="fa fa-shop"></i> Manage </a>
+                    <li class="hover fw-bold">
+                        <a href="/products"><i class="fa fa-shop"></i> Manage </a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </div>
     <div class="col d-flex flex-column overflow-x-hidden h-100 w-100 p-4" id="content">
-        <div class="d-grid m-auto h-100 w-100 align-content-start gap-3 p-3" id="feed">
-            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px"
-                 id="recommendations">
-                {% for product in recommendedProd %}
-                    <div class="col-xs-4">
-                        <p>{{ product.name }}</p>
-                        <hr class="w-75 justify-self-center">
-                        <p>{{ product.description }}</p>
-                        <p>{{ product.price }}</p>
-                    </div>
-                {% empty %}
-                    <p style="color:white"> No Recommended Products</p>
-                {% endfor %}
+        <div class="row d-flex my-3 mx-auto w-100 h-100"
+             style="max-width: 1700px;max-height: 180px; min-height:180px" id="banner">
+            <div class="d-flex justify-content-center align-items-center position-relative" style="height:160px; width: 160px; left:10px; top:10px;" id="logo">
+                <i class="fa fa-image fa-5x"></i>
             </div>
-            <hr>
-            <div class="row d-flex overflow-x-auto flex-nowrap w-100 rounded-1" style="height:150px"
-                 id="recommendations">
-                {% for product in saved %}
-                    <div class="col-xs-4">
-                        <p> {{ product.name }} </p>
-                        <hr class="w-75 justify-self-center">
-                        <p> {{ product.description }} </p>
-                        <p> {{ product.price }} </p>
-                    </div>
-                {% empty %}
-                    <p> No Saved Products</p>
-                {% endfor %}
+            <div class="d-flex justify-content-center align-items-center ms-auto position-relative" style="height:40px; width: 40px; right:10px; top:10px;background-color: dimgray;" id="edit">
+                <i class="fa fa-pencil fa-lg"></i>
             </div>
-            <hr>
         </div>
-    </div> <!-- No content outside this div -->
+        <div class="row justify-content-start">
+            <div class="col-auto">
+                {% if store.name == None %}
+                    <h3> {{ user.username }}'s Store </h3>
+                {% else %}
+                    <h3> {{ store.name }} </h3>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <a href="/createproduct" class="hover btn btn-sm btn-dark"
+                   style="max-width: 120px;border-color: #E8DCCD;" id="createBtn"> Create Product</a>
+            </div>
+        </div>
+        <div class="row d-flex flex-grow-1 my-2 w-100 h-100 m-0 position-relative">
+            <div class="col d-flex w-100 m-0 p-0 position-relative">
+                <table class="table table-dark table-borderless w-100 m-0">
+                    <thead style="border-bottom: #161718; border-bottom-style: solid;border-width: 3px">
+                    <tr>
+                        <td><span> Product Name </span></td>
+                        <td><span> Quantity Available </span></td>
+                        <td><span> Price </span></td>
+                        <td><span> Rating </span></td>
+                        <td><span> Amount Sold </span></td>
+                    </tr>
+                    </thead>
+                    <tbody style="border-width: 3px">
+                    {% for i in products %}
+                        <tr>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.qoh }}</td>
+                            <td>{{ i.price }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  <!-- No content outside this div -->
 </div>
 </body>
 </html>

@@ -95,6 +95,11 @@ def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products': products})
 
+def storefront(request):
+    return render(request, 'storefront.html')
+
+def createproduct(request):
+    return render(request, 'createproduct.html')
 
 def custom_logout(request):
     logout(request)
