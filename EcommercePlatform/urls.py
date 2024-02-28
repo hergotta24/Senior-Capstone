@@ -26,6 +26,8 @@ urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='UserRegisterView'),
     path('logout/', custom_logout, name='Logout'),
     path('account/', AccountManagementView.as_view(), name='AccountManagementView'),
+    path('storefront/', storefront, name='storefront'),
+    path('createproduct/', createproduct, name='createproduct'),
 
     path('', home, name='home')
 ]
