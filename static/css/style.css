@@ -1,25 +1,26 @@
-.login-input{
-    background-color: transparent!important;
+.login-input {
+    background-color: transparent !important;
     color: #e3d7c9 !important;
     border: solid 3px #e3d7c9;
 }
 
-.primary-color{
+.primary-color {
     color: #e3d7c9;
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active{
+input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #212529 inset !important;
 }
-input:-webkit-autofill{
+
+input:-webkit-autofill {
     -webkit-text-fill-color: #e3d7c9 !important;
 }
 
 /*START-------bootstrap-override-------------------------------------------------------------------------*/
-.btn-primary{
+.btn-primary {
     background-color: transparent;
     color: #e3d7c9;
     border-color: #e3d7c9;
@@ -33,7 +34,7 @@ input:-webkit-autofill{
 
 /*END---------bootstrap override-------------------------------------------------------------------------*/
 input:-webkit-autofill {
-  background-color: transparent!important;
+    background-color: transparent !important;
 }
 
 .card-img-top {
@@ -45,49 +46,65 @@ input:-webkit-autofill {
     transition: .5s ease;
     backface-visibility: hidden;
 }
+
 .checked {
-  color: orange;
+    color: orange;
 }
-.unchecked{
+
+.unchecked {
     color: grey;
 }
 
 .middle {
-  transition: .5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%)
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
 }
-.image-container{
+
+.image-container {
     position: relative;
 }
 
 
-
 .middle {
-  transition: .5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%)
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
 }
 
 .image-container:hover .card-img-top {
-  opacity: 0.3;
+    opacity: 0.3;
 }
 
 .image-container:hover .middle {
-  opacity: 1;
+    opacity: 1;
 }
 
 .text {
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  padding: 16px 32px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 16px 32px;
+}
+
+.navbar {
+    background-color: #2A283E;
+    position: fixed;
+    height: 100%;
+    width: 16rem;
+    justify-content: left;
+    z-index: 2;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
 }
