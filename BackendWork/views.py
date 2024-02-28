@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import User
+from BackendWork.models import User, Product
 
 
 class UserLoginView(View):
@@ -94,6 +94,11 @@ class AccountManagementView(View):
 def home(request):
     return render(request, 'home.html')
 
+def storefront(request):
+    return render(request, 'storefront.html')
+
+def createproduct(request):
+    return render(request, 'createproduct.html')
 
 def custom_logout(request):
     logout(request)
