@@ -100,5 +100,5 @@ def custom_logout(request):
     return redirect('/')
 
 
-def deleteProduct(request):
-    Product.objects.filter(productId=request).delete()  # no idea if this works, nor if id should equal request
+def deleteProduct(request, product):
+    Product.objects.filter(productId=product.productId).delete()
