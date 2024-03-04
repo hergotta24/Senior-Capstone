@@ -43,9 +43,6 @@ class Storefront(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, null=True)
-    logoURL = models.URLField(max_length=100, null=True)
-    bannerURL = models.URLField(max_length=100, null=True)
-    videoURL = models.URLField(max_length=100, null=True)
     dateCreated = models.DateTimeField(auto_now_add=True)
 
 
@@ -76,11 +73,8 @@ class Product(models.Model):
     qoh = models.PositiveIntegerField(default=0, verbose_name='Quantity on Hand')
     categoryId = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
     subCategoryId = models.ForeignKey('SubCategory', on_delete=models.SET_NULL, null=True)
-    weight = models.FloatField()
-    length = models.FloatField()
-    width = models.FloatField()
-    height = models.FloatField()
     dateAdded = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
 
 
 class Category(models.Model):
