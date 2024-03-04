@@ -45,9 +45,6 @@ class Storefront(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, null=True)
-    logoURL = models.URLField(max_length=100, null=True)
-    bannerURL = models.URLField(max_length=100, null=True)
-    videoURL = models.URLField(max_length=100, null=True)
     dateCreated = models.DateTimeField(auto_now_add=True)
 
 
@@ -86,6 +83,7 @@ class Product(models.Model):
     width = models.FloatField(validators=[MinValueValidator(0.01)])
     height = models.FloatField(validators=[MinValueValidator(0.01)])
     dateAdded = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
 
 
 class Category(models.Model):
