@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
-from BackendWork.forms import UserCreationForm, UserChangeForm
+from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
@@ -149,3 +149,39 @@ class UpdateProductView(View):
         product.save()
 
         return render(request, 'product_detail.html', {'product': product, 'message': 'Product Information Updated!!!'})
+
+
+class AddProductView(View):
+    @staticmethod
+    @login_required(login_url='/login/')
+    def get(request, store_id):
+        return render(request, 'addproduct.html')
+
+    @staticmethod
+    @login_required(login_url='/login/')
+    def post(request, store_id):
+        productData = json.loads(request.body)
+
+        form_data = {
+            'soldByStoreId': store_id,
+            'name': productData.get('name'),
+            'description': productData.get('description'),
+            'price': productData.get('price'),
+            'qoh': productData.get('qoh'),
+            'categoryId': productData.get('categoryId'),
+            'subcategoryId': productData.get('subCategoryId'),
+            'weight': productData.get('weight'),
+            'length': productData.get('length'),
+            'width': productData.get('width'),
+            'height': productData.get('height'),
+            'image': productData.get('image')
+        }
+
+        form = AddProductForm(form_data)
+
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
+        else:
+            return JsonResponse({'message': form.errors}, status=401)
+
