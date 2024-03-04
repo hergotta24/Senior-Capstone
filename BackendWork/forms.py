@@ -37,4 +37,4 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'categoryId', 'subCategoryId', 'weight',
-                  'length', 'width', 'height']
+                  'length', 'width', 'height', 'image']
