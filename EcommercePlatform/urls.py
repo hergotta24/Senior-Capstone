@@ -30,5 +30,6 @@ urlpatterns = [
                   path('createproduct/', createproduct, name='createproduct'),
                   path('products/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
                   path('shop/<int:store_id>/', VendorView.as_view(), name='vendor'),
+                  path('addproduct/<int:store_id>/', AddProduct.as_view(), name='AddProductView'),
                   path('', home, name='home')
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
