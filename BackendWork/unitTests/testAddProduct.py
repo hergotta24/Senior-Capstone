@@ -22,12 +22,14 @@ class AddProductTest(TestCase):
         }
 
     def testAddProductPageAccessible(self):  # might technically be an acceptance test?
-        response = self.client.get('/addproduct/')
+        self.client.login(username='testUser', password='p@55w0rD')
+        response = self.client.get(f'/addproduct/{self.storefront.storeId}/')
         self.assertEqual(response.status_code, 200, "add product page not returning 200 OK")
 
     def testAddProductSuccessRedirect(self):  # might technically be an acceptance test?
-        response = self.client.post('/addproduct/', json.dumps(self.form_data), content_type="application/json",
-                                    follow=True)
+        self.client.login(username='testUser', password='p@55w0rD')
+        response = self.client.post(f'/addproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
+                                    content_type="application/json", follow=True)
         self.assertEqual(response.status_code, 200, "add product page not returning 200 OK upon success")
 
     def testAddProductFormValid(self):
