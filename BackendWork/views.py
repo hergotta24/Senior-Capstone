@@ -101,4 +101,4 @@ def custom_logout(request):
 
 
 def deleteProduct(request):
-    Product.objects.filter(id=request).delete() # no idea if this works, nor if id should equal request
+    Product.objects.filter(productId=request).delete()  # no idea if this works, nor if id should equal request
