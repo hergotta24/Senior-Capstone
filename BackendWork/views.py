@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import User
+from BackendWork.models import *
 
 
 class UserLoginView(View):
@@ -95,6 +95,21 @@ def home(request):
     return render(request, 'home.html')
 
 
-def custom_logout(request):
+def customLogout(request):
     logout(request)
     return redirect('/')
+
+
+def deleteProduct(request, productid):
+    Product.objects.filter(productId=productid).delete()
+    # return redirect('storefront/')
+    # I assume it should redirect to the storefront, but my branch doesn't have that path
+
+
+class ProductDeleteView(View):
+
+    @staticmethod
+    # @login_required(login_url='/login/')
+    def post(request, productid):
+        Product.objects.filter(productId=productid).delete()
+
