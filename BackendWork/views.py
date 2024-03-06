@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import User, Product, Category
+from BackendWork.models import User, Product, Category, Invoice
 from django.shortcuts import render, get_object_or_404
 
 
@@ -92,6 +92,20 @@ class AccountManagementView(View):
         return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
 
 
+class AccountCartView(View):
+    @staticmethod
+    @login_required(login_url='/login/')
+    def get(request):
+        invoiceNumber = Invoice.objects.filter(customerId=request.user.id).order_by("customerId").first()
+        user_cart = Product.objects.filter(invoiceId=invoiceNumber)
+        return render(request, 'cart.html', {"cart": user_cart})
+
+    @staticmethod
+    @login_required(login_url='/login/')
+    def post(self, request):
+        return JsonResponse(status=200)
+
+
 def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products': products})
@@ -99,6 +113,7 @@ def home(request):
 
 def storefront(request):
     return render(request, 'storefront.html')
+
 
 class VendorView(View):
     @staticmethod
