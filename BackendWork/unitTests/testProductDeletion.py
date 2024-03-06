@@ -1,6 +1,7 @@
 from django.test import TestCase
 from BackendWork.models import *
 from django.test import Client
+import json
 
 
 class TestProductDeletion(TestCase):
@@ -19,12 +20,10 @@ class TestProductDeletion(TestCase):
 
     def testProductDeletion(self):
         product_id = self.product1.productId
-        # Product.objects.filter(productId=product_id).delete()
+        #  Product.objects.filter(productId=product_id).delete()
         print(product_id)
         print(int(str(product_id)))
-        self.client.get("delete/" + str(product_id) + "/")
-        # I need to figure out what to pass into the post, I know it will work if I find the right thing because
-        # The comment before this works, and that's all that the view calls
+        self.client.post("/delete/", json.dumps({"productid":product_id}), content_type="application/json")
         self.assertFalse(Product.objects.filter(productId=product_id).exists())
 
     def testMultipleItems(self):    # to make sure it isn't deleting everything
