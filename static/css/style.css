@@ -145,7 +145,6 @@ a {
 
 li {
     font-size: 14px;
-    margin-inline: 10px;
     padding: 8px;
 }
 
@@ -164,6 +163,10 @@ li {
 #search::placeholder {
     color: #E8DCCD;
     opacity: 70%;
+}
+
+#logoutBtn, #loginBtn, #createBtn {
+    color: #E8DCCD;
 }
 
 hr {
@@ -222,7 +225,7 @@ i {
     border-radius: 3px 0 0 3px;
 }
 
-.fit-content{
+.fit-content {
     height: fit-content;
 }
 
