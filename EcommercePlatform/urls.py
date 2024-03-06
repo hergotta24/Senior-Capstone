@@ -26,7 +26,7 @@ urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='UserRegisterView'),
     path('Account/Manage/', AccountManagementView.as_view(), name='AccountManagementView'),
     path('logout/', customLogout, name='Logout'),
-    path('delete/<int:productid>/', deleteProduct, name='deleteProduct'),
+    path('delete/<int:productid>/', ProductDeleteView.as_view(), name='deleteProduct'),
 
     path('', home, name='home')
 ]
