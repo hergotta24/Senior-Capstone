@@ -19,8 +19,10 @@ class TestProductDeletion(TestCase):
 
     def testProductDeletion(self):
         product_id = self.product1.productId
-        Product.objects.filter(productId=product_id).delete()
-        # self.client.post("delete/", )
+        # Product.objects.filter(productId=product_id).delete()
+        print(product_id)
+        print(int(str(product_id)))
+        self.client.get("delete/" + str(product_id) + "/")
         # I need to figure out what to pass into the post, I know it will work if I find the right thing because
         # The comment before this works, and that's all that the view calls
         self.assertFalse(Product.objects.filter(productId=product_id).exists())

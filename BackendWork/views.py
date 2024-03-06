@@ -95,10 +95,10 @@ def home(request):
     return render(request, 'home.html')
 
 
-def custom_logout(request):
+def customLogout(request):
     logout(request)
     return redirect('/')
 
 
-def deleteProduct(request, product):
-    Product.objects.filter(productId=product.productId).delete()
+def deleteProduct(request, productid):
+    Product.objects.filter(productId=productid).delete()
