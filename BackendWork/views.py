@@ -4,9 +4,10 @@ from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from BackendWork.models import User, Product, Category
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class UserLoginView(View):
@@ -123,32 +124,41 @@ class ProductDetailView(View):
         return render(request, 'product_detail.html', {'product': product})
 
 
-class UpdateProductView(View):
+class UpdateProductView(LoginRequiredMixin, View):
     @staticmethod
-    def post(request, product_id):
-        product = get_object_or_404(Product, productId=product_id)
+    def get(request, productId):
+        product = get_object_or_404(Product, productId=productId)
 
-        data = json.loads(request.body)
-        name = data.get('product_name')
-        price = data.get('price')
-        description = data.get('description')
-        qoh = data.get('qoh')
-        category = data.get('category')
-        image = data.get('image')
-        category = Category.objects.get(name=category)
+        if request.user == product.soldByStoreId.owner:
+            # Render the product update page
+            return render(request, 'edit_product.html', {'product': product})
+        else:
+            return HttpResponseForbidden("You are not authorized to access this page.")
+    @staticmethod
+    def post(request, productId):
+        product = get_object_or_404(Product, productId=productId)
 
-        # need to vaildation
+        if request.user == product.soldByStoreId.owner:
+            data = json.loads(request.body)
+            name = data.get('product_name')
+            price = data.get('price')
+            description = data.get('description')
+            qoh = data.get('qoh')
 
-        product.name = name
-        product.price = price
-        product.description = description
-        product.qoh = qoh
-        product.image = image
-        product.category = category
+            if name:
+                product.name = name
+            if price:
+                product.price = price
+            if description:
+                product.description = description
+            if qoh:
+                product.qoh = qoh
+            product.save()
 
-        product.save()
+            return JsonResponse({'message': 'Product Information Updated!!!'}, status=200)
 
-        return render(request, 'product_detail.html', {'product': product, 'message': 'Product Information Updated!!!'})
+        else:
+            return HttpResponseForbidden("You are not authorized to access this page.")
 
 
 class AddProductView(View):
