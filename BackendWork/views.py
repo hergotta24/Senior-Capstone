@@ -213,3 +213,15 @@ class AddProductView(View):
         else:
             return JsonResponse({'message': form.errors}, status=401)
 
+def deleteProduct(request, productid):
+    Product.objects.filter(productId=productid).delete()
+    # return redirect('storefront/')
+    # I assume it should redirect to the storefront, but my branch doesn't have that path
+
+
+class ProductDeleteView(View):
+
+    @staticmethod
+    # @login_required(login_url='/login/')
+    def post(request, productid):
+        Product.objects.filter(productId=productid).delete()
