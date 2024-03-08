@@ -23,14 +23,45 @@ class AddProductTest(TestCase):
 
     def testAddProductPageAccessible(self):  # might technically be an acceptance test?
         self.client.login(username='testUser', password='p@55w0rD')
-        response = self.client.get(f'/addproduct/{self.storefront.storeId}/')
+        response = self.client.get(f'/createproduct/{self.storefront.storeId}/')
         self.assertEqual(response.status_code, 200, "add product page not returning 200 OK")
 
     def testAddProductSuccessRedirect(self):  # might technically be an acceptance test?
         self.client.login(username='testUser', password='p@55w0rD')
-        response = self.client.post(f'/addproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
+        response = self.client.post(f'/createproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
                                     content_type="application/json", follow=True)
         self.assertEqual(response.status_code, 200, "add product page not returning 200 OK upon success")
+
+    def testAddProductNotLoggedIn(self):  # might technically be an acceptance test?
+        response = self.client.post(f'/createproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
+                                    content_type="application/json", follow=True)
+        self.assertTemplateUsed(response, "login.html")
+
+    def testAddProductWrongUser(self):  # might technically be an acceptance test?
+        self.user2 = User.objects.create_user(username='wrongUser', password='p@55w0rD', email='wronguser@gmail.com')
+        self.storefront2 = Storefront.objects.create(owner=self.user2, name='Test Storefront 2')
+        self.client.login(username='wrongUser', password='p@55w0rD')
+        response = self.client.post(f'/createproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
+                                    content_type="application/json", follow=True)
+        self.assertEqual(response.status_code, 403, "adding a product to a storefront you don't own "
+                                                    "should return 403 forbidden")
+        with self.assertRaises(Product.DoesNotExist, msg="newProduct should not have been added to database"):
+            Product.objects.get(name='Test Product')
+
+    def testAddProductDatabaseCheck(self):  # might technically be an acceptance test?
+        self.client.login(username='testUser', password='p@55w0rD')
+        self.client.post(f'/createproduct/{self.storefront.storeId}/', json.dumps(self.form_data),
+                         content_type="application/json", follow=True)
+        newProduct = Product.objects.get(name='Test Product')
+        self.assertEqual(newProduct.soldByStoreId_id, self.form_data['soldByStoreId'], "soldByStoreId mismatch")
+        self.assertEqual(newProduct.name, self.form_data['name'], "name mismatch")
+        self.assertEqual(newProduct.description, self.form_data['description'], "description mismatch")
+        self.assertEqual(float(newProduct.price), self.form_data['price'], "price mismatch")
+        self.assertEqual(newProduct.qoh, self.form_data['qoh'], "qoh mismatch")
+        self.assertEqual(newProduct.weight, self.form_data['weight'], "weight mismatch")
+        self.assertEqual(newProduct.length, self.form_data['length'], "length mismatch")
+        self.assertEqual(newProduct.width, self.form_data['width'], "width mismatch")
+        self.assertEqual(newProduct.height, self.form_data['height'], "height mismatch")
 
     def testAddProductFormValid(self):
         form = AddProductForm(data=self.form_data)
