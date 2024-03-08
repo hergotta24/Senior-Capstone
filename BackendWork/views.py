@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
@@ -101,6 +101,7 @@ def customLogout(request):
 
 
 def deleteProduct(request, productid):
+    get_object_or_404(Product, id=productid)
     Product.objects.filter(productId=productid).delete()
     # return redirect('storefront/')
     # I assume it should redirect to the storefront, but my branch doesn't have that path
