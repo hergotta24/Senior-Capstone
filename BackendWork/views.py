@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category
+from BackendWork.models import User, Product, Category, Storefront, Invoice
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -144,8 +144,8 @@ class ProductDetailView(View):
 
 class UpdateProductView(LoginRequiredMixin, View):
     @staticmethod
-    def get(request, productId):
-        product = get_object_or_404(Product, productId=productId)
+    def get(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
 
         if request.user == product.soldByStoreId.owner:
             # Render the product update page
@@ -153,8 +153,8 @@ class UpdateProductView(LoginRequiredMixin, View):
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
     @staticmethod
-    def post(request, productId):
-        product = get_object_or_404(Product, productId=productId)
+    def post(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
 
         if request.user == product.soldByStoreId.owner:
             data = json.loads(request.body)
