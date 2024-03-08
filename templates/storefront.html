@@ -158,7 +158,7 @@
             </div>
         </div>
 
-        <div class="row justify-content-end">
+        <div class="row col-10 justify-content-end">
             <div class="col-auto">
                 <a href="/createproduct" class="hover btn btn-sm btn-dark"
                    style="max-width: 120px;border-color: #E8DCCD;" id="createBtn"> Create Product</a>
@@ -166,31 +166,65 @@
         </div>
         <div class="row d-flex flex-grow-1 my-2 w-100 h-100 m-0 position-relative">
             <div class="col d-flex w-100 m-0 p-0 position-relative">
-                <table class="table table-dark table-borderless w-100 m-0">
-                    <thead style="border-bottom: #161718; border-bottom-style: solid;border-width: 3px">
-                    <tr>
-                        <td><span> Product Name </span></td>
-                        <td><span> Quantity Available </span></td>
-                        <td><span> Price </span></td>
-                        <td><span> Rating </span></td>
-                        <td><span> Amount Sold </span></td>
-                    </tr>
-                    </thead>
-                    <tbody style="border-width: 3px">
-                    {% for i in products %}
-                        <tr>
-                            <td>{{ i.name }}</td>
-                            <td>{{ i.qoh }}</td>
-                            <td>{{ i.price }}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                {#                <table class="table table-dark table-borderless w-100 m-0">#}
+                {#                    <thead style="border-bottom: #161718; border-bottom-style: solid;border-width: 3px">#}
+                {#                    <tr>#}
+                {#                        <td><span> Product Name </span></td>#}
+                {#                        <td><span> Quantity Available </span></td>#}
+                {#                        <td><span> Price </span></td>#}
+                {#                        <td><span> Rating </span></td>#}
+                {#                        <td><span> Amount Sold </span></td>#}
+                {#                    </tr>#}
+                {#                    </thead>#}
+                {#                    <tbody style="border-width: 3px">#}
+                {#                    {% for i in products %}#}
+                {#                        <tr>#}
+                {#                            <td>{{ i.name }}</td>#}
+                {#                            <td>{{ i.qoh }}</td>#}
+                {#                            <td>{{ i.price }}</td>#}
+                {#                            <td></td>#}
+                {#                            <td></td>#}
+                {#                        </tr>#}
+                {#                    {% endfor %}#}
+                {#                    </tbody>#}
+                {#                </table>#}
+
+                <div class="container col-12">
+                    <div class="row col-12">
+                        <div class="col-12">
+                            <!-- Header Row -->
+                            <div class="row mx-auto d-flex p-2 col-12 bg-dark primary-color font-weight-bold py-2 mb-3">
+                                <div class="col-12 col-md-2 p-0">Product Name</div>
+                                <div class="col-12 col-md-2 p-0">Quantity On Hand</div>
+                                <div class="col-12 col-md-2 p-0">Price</div>
+                                <div class="col-12 col-md-3 p-0">Star Rating</div>
+                                <div class="col-12 col-md-3 p-0"></div>
+                            </div>
+                            {% for product in products %}#}
+                                <!-- Product List -->
+                                <div class="product border px-2 py-3 d-flex col-12 primary-color rounded mb-3">
+                                    <div class="product-name col-12 col-md-2">{{ product.name }}</div>
+                                    <div class="col-12 col-md-2">{{ product.qoh }}</div>
+                                    <div class="col-12 col-md-2">{{ product.price }}</div>
+                                    <div class="col-12 col-md-3 rating">⭐⭐⭐⭐</div>
+                                    <div class="col-12 col-md-3 d-flex p-0">
+                                        <button class="col-6 bg-danger" data-productId="{{ product.productId }}">Remove</button>
+                                        <div class="col-6 px-auto">
+                                            <a href="{% url 'EditProductView' product_id=product.productId %}" class="col-10 float-end">
+                                                <i class="fa fa-pencil fa-lg" style="visibility: inherit"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            {% endfor %}#}
+                            <!-- Add more products here -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- No content outside this div -->
         </div>
-    </div>  <!-- No content outside this div -->
-</div>
 </body>
 </html>
