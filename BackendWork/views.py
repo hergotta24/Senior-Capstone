@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category, Storefront
+from BackendWork.models import User, Product, Category
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -93,6 +93,20 @@ class AccountManagementView(View):
         return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
 
 
+class AccountCartView(View):
+    @staticmethod
+    @login_required(login_url='/login/')
+    def get(request):
+        invoiceNumber = Invoice.objects.filter(customerId=request.user.id).order_by("customerId").first()
+        user_cart = Product.objects.filter(invoiceId=invoiceNumber)
+        return render(request, 'cart.html', {"cart": user_cart})
+
+    @staticmethod
+    @login_required(login_url='/login/')
+    def post(self, request):
+        return JsonResponse(status=200)
+
+
 def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products': products})
@@ -130,8 +144,8 @@ class ProductDetailView(View):
 
 class UpdateProductView(LoginRequiredMixin, View):
     @staticmethod
-    def get(request, product_id):
-        product = get_object_or_404(Product, productId=product_id)
+    def get(request, productId):
+        product = get_object_or_404(Product, productId=productId)
 
         if request.user == product.soldByStoreId.owner:
             # Render the product update page
@@ -139,8 +153,8 @@ class UpdateProductView(LoginRequiredMixin, View):
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
     @staticmethod
-    def post(request, product_id):
-        product = get_object_or_404(Product, productId=product_id)
+    def post(request, productId):
+        product = get_object_or_404(Product, productId=productId)
 
         if request.user == product.soldByStoreId.owner:
             data = json.loads(request.body)
