@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category
+from BackendWork.models import User, Product, Category, Storefront
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -99,7 +99,8 @@ def home(request):
 
 
 def storefront(request):
-    return render(request, 'storefront.html')
+    store_id = Storefront.objects.get(owner=request.user).storeId
+    return render(request, 'storefront.html', {"store_id": store_id})
 
 class VendorView(View):
     @staticmethod
@@ -108,8 +109,8 @@ class VendorView(View):
         return render(request, 'vendor.html', {'products': products})
 
 
-def createproduct(request):
-    return render(request, 'createproduct.html')
+# def createproduct(request):
+#     return render(request, 'createproduct.html')
 
 
 def custom_logout(request):
@@ -165,33 +166,39 @@ class AddProductView(View):
     @staticmethod
     @login_required(login_url='/login/')
     def get(request, store_id):
-        return render(request, 'addproduct.html')
+        if store_id == Storefront.objects.get(owner=request.user).storeId:
+            return render(request, 'createproduct.html')
+        else:
+            return redirect('')
 
     @staticmethod
     @login_required(login_url='/login/')
     def post(request, store_id):
-        productData = json.loads(request.body)
+        if store_id == Storefront.objects.get(owner=request.user).storeId:
+            productData = json.loads(request.body)
+            form_data = {
+                'soldByStoreId': store_id,
+                'name': productData.get('name'),
+                'description': productData.get('description'),
+                'price': productData.get('price'),
+                'qoh': productData.get('qoh'),
+                'categoryId': productData.get('categoryId'),
+                'subcategoryId': productData.get('subCategoryId'),
+                'weight': productData.get('weight'),
+                'length': productData.get('length'),
+                'width': productData.get('width'),
+                'height': productData.get('height'),
+                'image': productData.get('image')
+            }
 
-        form_data = {
-            'soldByStoreId': store_id,
-            'name': productData.get('name'),
-            'description': productData.get('description'),
-            'price': productData.get('price'),
-            'qoh': productData.get('qoh'),
-            'categoryId': productData.get('categoryId'),
-            'subcategoryId': productData.get('subCategoryId'),
-            'weight': productData.get('weight'),
-            'length': productData.get('length'),
-            'width': productData.get('width'),
-            'height': productData.get('height'),
-            'image': productData.get('image')
-        }
+            form = AddProductForm(form_data)
 
-        form = AddProductForm(form_data)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
+            else:
+                return JsonResponse({'message': form.errors}, status=401)
 
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
         else:
-            return JsonResponse({'message': form.errors}, status=401)
+            return HttpResponseForbidden("You cannot add products to a storefront you don't own.")
 
