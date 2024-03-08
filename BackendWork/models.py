@@ -66,12 +66,25 @@ class StoreReviews(models.Model):
     reviewDate = models.DateTimeField(auto_now_add=True)
 
 
+class Invoice(models.Model):
+    invoiceId = models.AutoField(primary_key=True)
+    customerId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    storeId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
+    subtotal = models.DecimalField(max_digits=8, decimal_places=2)
+    discount = models.DecimalField(max_digits=8, decimal_places=2)
+    tax = models.DecimalField(max_digits=8, decimal_places=2)
+    shipping = models.DecimalField(max_digits=8, decimal_places=2)
+    orderStatus = models.CharField(max_length=20)
+    invoiceDate = models.DateTimeField(auto_now_add=True)
+
+
 class Product(models.Model):
     class Meta:
         unique_together = ['name', 'soldByStoreId']
 
     productId = models.AutoField(primary_key=True)
     soldByStoreId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
+    invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
@@ -130,18 +143,6 @@ class ProductReviews(models.Model):
     rating = models.PositiveIntegerField()
     comment = models.CharField(max_length=500)
     reviewDate = models.DateTimeField(auto_now_add=True)
-
-
-class Invoice(models.Model):
-    reviewId = models.AutoField(primary_key=True)
-    storeId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
-    customerId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    subtotal = models.DecimalField(max_digits=8, decimal_places=2)
-    discount = models.DecimalField(max_digits=8, decimal_places=2)
-    tax = models.DecimalField(max_digits=8, decimal_places=2)
-    shipping = models.DecimalField(max_digits=8, decimal_places=2)
-    orderStatus = models.CharField(max_length=20)
-    invoiceDate = models.DateTimeField(auto_now_add=True)
 
 
 class LineItem(models.Model):
