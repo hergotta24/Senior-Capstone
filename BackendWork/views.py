@@ -4,10 +4,9 @@ from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
-
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category, Invoice
-
+from django.http import JsonResponse
+from BackendWork.models import User, Product, Category, Invoice, LineItem
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -100,7 +99,7 @@ class AccountCartView(View):
     @login_required(login_url='/login/')
     def get(request):
         invoiceNumber = Invoice.objects.filter(customerId=request.user.id).order_by("customerId").first()
-        user_cart = Product.objects.filter(invoiceId=invoiceNumber)
+        user_cart = LineItem.objects.filter(invoiceId=invoiceNumber)
         return render(request, 'cart.html', {"cart": user_cart})
 
     @staticmethod

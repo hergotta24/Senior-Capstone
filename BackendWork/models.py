@@ -84,7 +84,6 @@ class Product(models.Model):
 
     productId = models.AutoField(primary_key=True)
     soldByStoreId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
-    invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
