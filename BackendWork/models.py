@@ -82,7 +82,7 @@ class Product(models.Model):
     class Meta:
         unique_together = ['name', 'soldByStoreId']
 
-    CATEGORY_CHOICES = {'arts_crafts': 'Art & Craft Supplies', 'automotive': 'Automotive & Tools',
+    CATEGORY_CHOICES = {'arts_crafts': 'Arts & Crafts Supplies', 'automotive': 'Automotive & Tools',
                         'children': 'Baby & Kids', 'beauty': 'Beauty & Personal Care', 'books': 'Books & Stationery',
                         'clothing': 'Clothing & Apparel', 'electronics': 'Electronics', 'fitness': 'Fitness & Exercise',
                         'furniture_decor': 'Furniture & Decor', 'outdoors': 'Gardening & Outdoor Living',
@@ -92,7 +92,7 @@ class Product(models.Model):
 
     productId = models.AutoField(primary_key=True)
     soldByStoreId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
-    invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+    # invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # not sure this should be in Product model
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
