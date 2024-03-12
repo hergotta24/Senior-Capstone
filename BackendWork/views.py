@@ -115,6 +115,11 @@ def custom_logout(request):
     logout(request)
     return redirect('/')
 
+def deleteProduct(request, productid):
+    get_object_or_404(Product, id=productid)
+    Product.objects.filter(productId=productid).delete()
+    # return redirect('storefront/')
+    # I assume it should redirect to the storefront, but my branch doesn't have that path
 
 class ProductDetailView(View):
     @staticmethod
