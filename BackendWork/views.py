@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category, Storefront, Invoice
+from BackendWork.models import User, Product, Storefront, Invoice
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -112,12 +112,19 @@ def home(request):
     return render(request, 'home.html', {'products': products})
 
 
+def categoryFilter(request, category):
+    products = Product.objects.filter(category=category)
+    return render(request, 'home.html', {'products': products})
+
+
 def storefront(request):
     user = request.user
     store = Storefront.objects.filter(owner=user).first()
     products = Product.objects.filter(soldByStoreId=store)
 
     return render(request, 'storefront.html', {'storefront': store, 'products': products})
+
+
 
 class VendorView(View):
     @staticmethod
@@ -196,8 +203,7 @@ class AddProductView(View):
             'description': productData.get('description'),
             'price': productData.get('price'),
             'qoh': productData.get('qoh'),
-            'categoryId': productData.get('categoryId'),
-            'subcategoryId': productData.get('subCategoryId'),
+            'category': productData.get('category'),
             'weight': productData.get('weight'),
             'length': productData.get('length'),
             'width': productData.get('width'),
