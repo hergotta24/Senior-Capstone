@@ -11,7 +11,7 @@ document.getElementById('updateAccountForm').addEventListener('submit', function
     };
 
     // Send form data using fetch post request
-    fetch('/Account/Manage/', {
+    fetch('/account/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -28,11 +28,11 @@ document.getElementById('updateAccountForm').addEventListener('submit', function
     })
     .then(data => {
         console.log(data.message);
-        // Handle successful registration
+        makeToast(data.message, 200);
     })
     .catch(error => {
-        console.error('Error:', error);
-        // Handle registration errors
+        let errorMessage = typeof error.message === 'object' ? Object.values(error.message).join(" ") : error.message;
+        makeToast(errorMessage, 400);
     });
 });
 
@@ -50,4 +50,31 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+function makeToast(message, status) {
+    var toast = document.getElementById("toast");
+    var bgColor = "";
+    if (status == 200) {
+        bgColor = "bg-success";
+    } else if (status == 400) {
+        bgColor = "bg-danger";
+    }
+    toast.classList.add(bgColor)
+
+    var toastBody = toast.querySelector('.toast-body');
+
+    // Set the message
+    toastBody.textContent = message;
+
+    // Show the toast
+    var bootstrapToast = new bootstrap.Toast(toast);
+    bootstrapToast.show();
+
+    setTimeout(function () {
+        if (status == 200) {
+            bootstrapToast.hide();
+            toast.classList.remove(bgColor);
+            toastBody.textContent = "";
+        }
+    }, 4000);
 }

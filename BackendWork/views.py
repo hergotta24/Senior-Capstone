@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
 from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import *
+from BackendWork.models import User, Product, Category
+from django.shortcuts import render, get_object_or_404
 
 
 class UserLoginView(View):
@@ -24,7 +25,7 @@ class UserLoginView(View):
             return redirect('/')
         else:
             # Return an 'invalid login' error message.
-            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+            return render(request, 'login.html', {'error': 'Invalid login credentials.'}, status=401)
 
 
 # accounts/views.py
@@ -32,8 +33,6 @@ class UserLoginView(View):
 class UserRegisterView(View):
     @staticmethod
     def get(request):
-        user = request.user
-        form = UserCreationForm(instance=user)
         return render(request, 'register.html')
 
     @staticmethod
@@ -48,15 +47,15 @@ class UserRegisterView(View):
             'email': email,
             'username': username,
             'password1': password1,
-            'password2': password1,  # Assuming you want both password fields to have the same value
+            'password2': password2,  # Assuming you want both password fields to have the same value
         }
 
         form = UserCreationForm(form_data)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return JsonResponse({'message': 'Account Registered! Redirecting you to login to sign in...'}, status=200)
         else:
-            return JsonResponse({'error': form.errors}, status=400)
+            return JsonResponse({'message': form.errors}, status=401)
 
 
 class AccountManagementView(View):
@@ -64,7 +63,6 @@ class AccountManagementView(View):
     @login_required(login_url='/login/')
     def get(request):
         user = request.user
-
         form = UserChangeForm(instance=user)
         return render(request, 'account_management.html', {'form': form})
 
@@ -78,39 +76,76 @@ class AccountManagementView(View):
         last_name = data.get('last_name')
         phone_number = data.get('phone_number')
 
-        # Fetch the user instance you want to update
-        user = User.objects.get(username=username)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
 
-        # Construct the form instance with the user instance and the updated data
+        if user != request.user:
+            return JsonResponse({'error': 'You are not authorized to update this user'}, status=403)
+
         user.first_name = first_name
         user.last_name = last_name
         user.phone_number = phone_number
-
         user.save()
 
-        return redirect('/')
+        return JsonResponse({'message': 'Account Information Updated!!!'}, status=200)
 
 
 def home(request):
-    return render(request, 'home.html')
+    products = Product.objects.all()
+    return render(request, 'home.html', {'products': products})
 
 
-def customLogout(request):
+def storefront(request):
+    return render(request, 'storefront.html')
+
+class VendorView(View):
+    @staticmethod
+    def get(request, store_id):
+        products = Product.objects.filter(soldByStoreId_id=store_id)
+        return render(request, 'vendor.html', {'products': products})
+
+
+def createproduct(request):
+    return render(request, 'createproduct.html')
+
+
+def custom_logout(request):
     logout(request)
     return redirect('/')
 
 
-def deleteProduct(request, productid):
-    get_object_or_404(Product, id=productid)
-    Product.objects.filter(productId=productid).delete()
-    # return redirect('storefront/')
-    # I assume it should redirect to the storefront, but my branch doesn't have that path
-
-
-class ProductDeleteView(View):
-
+class ProductDetailView(View):
     @staticmethod
-    # @login_required(login_url='/login/')
-    def post(request, productid):
-        Product.objects.filter(productId=productid).delete()
+    def get(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
+        return render(request, 'product_detail.html', {'product': product})
 
+
+class UpdateProductView(View):
+    @staticmethod
+    def post(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
+
+        data = json.loads(request.body)
+        name = data.get('product_name')
+        price = data.get('price')
+        description = data.get('description')
+        qoh = data.get('qoh')
+        category = data.get('category')
+        image = data.get('image')
+        category = Category.objects.get(name=category)
+
+        # need to vaildation
+
+        product.name = name
+        product.price = price
+        product.description = description
+        product.qoh = qoh
+        product.image = image
+        product.category = category
+
+        product.save()
+
+        return render(request, 'product_detail.html', {'product': product, 'message': 'Product Information Updated!!!'})
