@@ -36,5 +36,5 @@ class UserCreationForm(UserCreationForm):
 class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'categoryId', 'subCategoryId', 'weight',
+        fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'category', 'weight',
                   'length', 'width', 'height', 'image']

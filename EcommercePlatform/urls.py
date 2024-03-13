@@ -34,5 +34,6 @@ urlpatterns = [
                   path('shop/<int:store_id>/', VendorView.as_view(), name='vendor'),
                   path('addproduct/<int:store_id>/', AddProductView.as_view(), name='AddProductView'),
                   path('delete/<int:productid>/', ProductDeleteView.as_view(), name='deleteProduct'),
-                  path('', home, name='home')
+                  path('', home, name='home'),
+                  path('filter/<str:category>/', categoryFilter, name='categoryFilter')
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
