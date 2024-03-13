@@ -129,8 +129,9 @@ def storefront(request):
 class VendorView(View):
     @staticmethod
     def get(request, store_id):
+        store = Storefront.objects.filter(storeId=store_id).first()
         products = Product.objects.filter(soldByStoreId_id=store_id)
-        return render(request, 'vendor.html', {'products': products})
+        return render(request, 'vendor.html', {'products': products, 'store': store})
 
 
 def createproduct(request):
