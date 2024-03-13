@@ -9,9 +9,18 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     shipping_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
-                                            related_name="userShippingAddress", blank=True)
+                                         related_name="userShippingAddress", blank=True)
     billing_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
                                         related_name="userBillingAddress", blank=True)
+    payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True,
+                                related_name="paymentMethod", blank=True)
+
+
+class Payment(models.Model):
+    name = models.CharField(max_length=100)
+    card_number = models.CharField(max_length=16)
+    expiration_date = models.CharField(max_length=4)
+    back_number = models.CharField(max_length=3)
 
 
 class Address(models.Model):

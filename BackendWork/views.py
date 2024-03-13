@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views import View
-from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
+from BackendWork.forms import *
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
@@ -100,12 +101,39 @@ class AccountCartView(View):
     def get(request):
         invoiceNumber = Invoice.objects.filter(customerId=request.user.id).order_by("customerId").first()
         user_cart = LineItem.objects.filter(invoiceId=invoiceNumber)
-        return render(request, 'cart.html', {"cart": user_cart})
+        subtotal = 0.00
+        for y in user_cart:
+            subtotal += float(y.productId.price)
+        tax = round(subtotal * 0.082, 2)
+        shipping = 20.00
+        discount = 1.00
+        total = subtotal + tax + shipping
+        return render(request, 'cart.html',
+                      {"cart": user_cart, "subtotal": format(subtotal, '0.2f'), "tax": format(tax, '0.2f')
+                       , "shipping": format(shipping, '0.2f'), "discount": format(discount, '0.2f'),
+                       "total": format(total, '0.2f')})
 
     @staticmethod
     @login_required(login_url='/login/')
-    def post(self, request):
-        return JsonResponse(status=200)
+    def post(request):
+        data = json.loads(request.body)
+        name = data.get('name')
+        card = data.get('card')
+        expiration = data.get('expiration')
+        back = data.get('back')
+
+        form_data = {
+            'name': name,
+            'card': card,
+            'expiration': expiration,
+            'back': back,
+        }
+
+        form = CardCreationForm(form_data)
+        if form.is_valid():
+            return JsonResponse({'message': 'Card success! Redirecting you to home page...'}, status=200)
+        else:
+            return JsonResponse({'message': form.errors}, status=401)
 
 
 def home(request):
