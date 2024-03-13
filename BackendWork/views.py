@@ -6,8 +6,7 @@ from BackendWork.forms import *
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from django.http import JsonResponse
-from BackendWork.models import User, Product, Category, Invoice, LineItem
+from BackendWork.models import User, Product, Category, Storefront, Invoice, LineItem
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -142,8 +141,11 @@ def home(request):
 
 
 def storefront(request):
-    return render(request, 'storefront.html')
+    user = request.user
+    store = Storefront.objects.filter(owner=user).first()
+    products = Product.objects.filter(soldByStoreId=store)
 
+    return render(request, 'storefront.html', {'storefront': store, 'products': products})
 
 class VendorView(View):
     @staticmethod
@@ -170,8 +172,8 @@ class ProductDetailView(View):
 
 class UpdateProductView(LoginRequiredMixin, View):
     @staticmethod
-    def get(request, productId):
-        product = get_object_or_404(Product, productId=productId)
+    def get(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
 
         if request.user == product.soldByStoreId.owner:
             # Render the product update page
@@ -179,8 +181,8 @@ class UpdateProductView(LoginRequiredMixin, View):
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
     @staticmethod
-    def post(request, productId):
-        product = get_object_or_404(Product, productId=productId)
+    def post(request, product_id):
+        product = get_object_or_404(Product, productId=product_id)
 
         if request.user == product.soldByStoreId.owner:
             data = json.loads(request.body)
@@ -239,3 +241,15 @@ class AddProductView(View):
         else:
             return JsonResponse({'message': form.errors}, status=401)
 
+def deleteProduct(request, productid):
+    Product.objects.filter(productId=productid).delete()
+    # return redirect('storefront/')
+    # I assume it should redirect to the storefront, but my branch doesn't have that path
+
+
+class ProductDeleteView(View):
+
+    @staticmethod
+    # @login_required(login_url='/login/')
+    def post(request, productid):
+        Product.objects.filter(productId=productid).delete()
