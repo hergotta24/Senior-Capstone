@@ -139,10 +139,6 @@ a {
     text-decoration: none;
 }
 
-.hover:hover, #searchBtn:hover {
-    background-color: #46494d;
-}
-
 li {
     font-size: 14px;
     padding: 8px;
@@ -184,20 +180,10 @@ div.price
     opacity: 70%;
 }
 
-#logoutBtn, #loginBtn, #createBtn {
-    color: #E8DCCD;
-}
 
-hr {
-    height: 10px;
-    background-color: #161718;
-    border: none;
-    opacity: 0.75;
-}
 
-i {
-    color: #E8DCCD;
-}
+
+
 
 ----------------------------------
 * {
