@@ -110,12 +110,14 @@ class AccountCartView(View):
 
 def home(request):
     products = Product.objects.all()
-    return render(request, 'home.html', {'products': products})
+    categories = Product.CATEGORY_CHOICES.items()
+    return render(request, 'home.html', {'products': products, 'categories': categories})
 
 
 def categoryFilter(request, category):
     products = Product.objects.filter(category=category)
-    return render(request, 'home.html', {'products': products})
+    categories = Product.CATEGORY_CHOICES.items()
+    return render(request, 'home.html', {'products': products, 'categories': categories})
 
 
 class StorefrontView(View):
