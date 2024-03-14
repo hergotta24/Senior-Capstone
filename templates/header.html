@@ -1,0 +1,32 @@
+<div class="row d-flex flex-nowrap align-items-center align-content-center py-3 ps-0 mx-auto w-100 position-fixed"
+     id="header">
+    <div class=" col-lg-1 col-sm-1">
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false"
+                aria-controls="sidebarContent" class="btn btn-sm hover">
+            <i class="fa fa-bars fa-md"></i>
+        </button>
+    </div>
+    <div class="col-lg-1"></div>
+    <div class="col-lg-6 offset-lg-1 col-sm-2">
+        <div class="input-group mx-auto w-100 border-solid border-2" id="searchbar" style="border-color:#E8DCCD">
+            <input class="form-control ps-3 rounded-start-pill" type="search" id="search" placeholder="Search"
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn rounded-end-pill pe-3 hover" id="searchBtn"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1 col-sm-1 offset-lg-2 d-flex justify-content-end">
+        <div class="col">
+            {% if user.is_authenticated %}
+                <a href="/logout" class="hover btn btn-dark btn-sm d-inline" id="loginBtn">Logout</a>
+            {% else %}
+                <a href="/login" class="hover btn btn-dark btn-sm d-inline" id="loginBtn">Login</a>
+            {% endif %}
+        </div>
+        <div class="col" style="margin-inline:15px">
+            <a href="/cart" class="btn btn-sm hover justify-content-center d-inline"><i
+                    class="fa fa-shopping-cart fa-lg"></i></a>
+        </div>
+    </div>
+</div>
