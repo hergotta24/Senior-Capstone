@@ -1,13 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
-from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
+from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm, StorefrontForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
 from BackendWork.models import User, Product, Storefront, Invoice
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class UserLoginView(View):
@@ -117,12 +118,30 @@ def categoryFilter(request, category):
     return render(request, 'home.html', {'products': products})
 
 
-def storefront(request):
-    user = request.user
-    store = Storefront.objects.filter(owner=user).first()
-    products = Product.objects.filter(soldByStoreId=store)
+class StorefrontView(View):
+    @staticmethod
+    def get(request):
+        user = request.user
+        store = Storefront.objects.filter(owner=user).first()
+        products = Product.objects.filter(soldByStoreId=store)
+        return render(request, 'storefront.html', {'store': store, 'products': products})
 
-    return render(request, 'storefront.html', {'storefront': store, 'products': products})
+    @staticmethod
+    def post(request):
+        user = request.user
+        store = Storefront.objects.filter(owner=user).first()
+        store_name = request.POST.get('storeName')
+        store_description = request.POST.get('storeDescription')
+        banner_input = request.FILES.get('bannerInput')
+        logo_input = request.FILES.get('logoInput')
+
+        store.name = store_name
+        store.description = store_description
+        store.bannerInput = banner_input
+        store.logoInput = logo_input
+        store.save()
+
+        return JsonResponse({'success': True, 'message': 'Changes confirmed successfully'})
 
 
 
@@ -160,6 +179,7 @@ class UpdateProductView(LoginRequiredMixin, View):
             return render(request, 'edit_product.html', {'product': product})
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
+
     @staticmethod
     def post(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
@@ -219,6 +239,7 @@ class AddProductView(View):
             return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
         else:
             return JsonResponse({'message': form.errors}, status=401)
+
 
 def deleteProduct(request, productid):
     Product.objects.filter(productId=productid).delete()
