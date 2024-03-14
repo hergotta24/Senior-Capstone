@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from BackendWork.models import User, Product, Category
+from BackendWork.models import User, Product, Category, ProductReviews
 from django.shortcuts import render, get_object_or_404
 
 
@@ -125,7 +125,8 @@ class ProductDetailView(View):
     @staticmethod
     def get(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
-        return render(request, 'product_detail.html', {'product': product})
+        reviews = ProductReviews.objects.filter(productId=product.productId)
+        return render(request, 'product_detail.html', {'product': product, 'reviews': reviews})
 
 
 class UpdateProductView(View):
