@@ -1,10 +1,12 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 
 
 # Create your models here.
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=10, null=True, blank=True)
     shipping_address = models.ForeignKey('Address', on_delete=models.SET_NULL, null=True,
                                             related_name="userShippingAddress", blank=True)
@@ -64,28 +66,55 @@ class StoreReviews(models.Model):
     reviewDate = models.DateTimeField(auto_now_add=True)
 
 
+class Invoice(models.Model):
+    invoiceId = models.AutoField(primary_key=True)
+    customerId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    storeId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
+    subtotal = models.DecimalField(max_digits=8, decimal_places=2)
+    discount = models.DecimalField(max_digits=8, decimal_places=2)
+    tax = models.DecimalField(max_digits=8, decimal_places=2)
+    shipping = models.DecimalField(max_digits=8, decimal_places=2)
+    orderStatus = models.CharField(max_length=20)
+    invoiceDate = models.DateTimeField(auto_now_add=True)
+
+
 class Product(models.Model):
+    class Meta:
+        unique_together = ['name', 'soldByStoreId']
+
+    CATEGORY_CHOICES = {'arts_crafts': 'Arts & Crafts Supplies', 'automotive': 'Automotive & Tools',
+                        'children': 'Baby & Kids', 'beauty': 'Beauty & Personal Care', 'books': 'Books & Stationery',
+                        'clothing': 'Clothing & Apparel', 'electronics': 'Electronics', 'fitness': 'Fitness & Exercise',
+                        'furniture_decor': 'Furniture & Decor', 'outdoors': 'Gardening & Outdoor Living',
+                        'health_wellness': 'Health & Wellness', 'jewelry': 'Jewelry & Accessories',
+                        'office': 'Office Supplies', 'pets': 'Pet Supplies', 'sports': 'Sports & Outdoors',
+                        'toys': 'Toys & Games', 'travel': 'Travel & Luggage'}
+
     productId = models.AutoField(primary_key=True)
     soldByStoreId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
+    # invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # not sure this should be in Product model
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
     qoh = models.PositiveIntegerField(default=0, verbose_name='Quantity on Hand')
-    categoryId = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
-    subCategoryId = models.ForeignKey('SubCategory', on_delete=models.SET_NULL, null=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    weight = models.FloatField(validators=[MinValueValidator(0.01)])
+    length = models.FloatField(validators=[MinValueValidator(0.01)])
+    width = models.FloatField(validators=[MinValueValidator(0.01)])
+    height = models.FloatField(validators=[MinValueValidator(0.01)])
     dateAdded = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='product_images/', null=True, blank=True)
 
 
-class Category(models.Model):
-    categoryId = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-
-
-class SubCategory(models.Model):
-    subCategoryId = models.AutoField(primary_key=True)
-    categoryId = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+# class Category(models.Model):
+#     categoryId = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=30)
+#
+#
+# class SubCategory(models.Model):
+#     subCategoryId = models.AutoField(primary_key=True)
+#     categoryId = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=30)
 
 
 class ProductVideos(models.Model):
@@ -121,18 +150,6 @@ class ProductReviews(models.Model):
     rating = models.PositiveIntegerField()
     comment = models.CharField(max_length=500)
     reviewDate = models.DateTimeField(auto_now_add=True)
-
-
-class Invoice(models.Model):
-    reviewId = models.AutoField(primary_key=True)
-    storeId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
-    customerId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    subtotal = models.DecimalField(max_digits=8, decimal_places=2)
-    discount = models.DecimalField(max_digits=8, decimal_places=2)
-    tax = models.DecimalField(max_digits=8, decimal_places=2)
-    shipping = models.DecimalField(max_digits=8, decimal_places=2)
-    orderStatus = models.CharField(max_length=20)
-    invoiceDate = models.DateTimeField(auto_now_add=True)
 
 
 class LineItem(models.Model):

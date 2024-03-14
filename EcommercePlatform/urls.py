@@ -27,10 +27,13 @@ urlpatterns = [
                   path('logout/', custom_logout, name='Logout'),
                   path('account/', AccountManagementView.as_view(), name='AccountManagementView'),
                   path('storefront/', storefront, name='storefront'),
+                  path('cart/', AccountCartView.as_view(), name='AccountCartView'),
+                  path('storefront/<int:product_id>/', UpdateProductView.as_view(), name='EditProductView'),
                   path('createproduct/', createproduct, name='createproduct'),
                   path('products/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
                   path('shop/<int:store_id>/', VendorView.as_view(), name='vendor'),
-                  path('delete/<int:productid>/', deleteProduct, name='deleteProduct'),
-
-                  path('', home, name='home')
+                  path('addproduct/<int:store_id>/', AddProductView.as_view(), name='AddProductView'),
+                  path('delete/<int:productid>/', ProductDeleteView.as_view(), name='deleteProduct'),
+                  path('', home, name='home'),
+                  path('filter/<str:category>/', categoryFilter, name='categoryFilter')
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
