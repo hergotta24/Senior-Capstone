@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
@@ -117,7 +119,12 @@ def storefront(request):
     store = Storefront.objects.filter(owner=user).first()
     products = Product.objects.filter(soldByStoreId=store)
 
-    return render(request, 'storefront.html', {'storefront': store, 'products': products})
+    return render(request, 'storefront.html', {'store': store, 'products': products})
+
+
+def productCreate(request):
+    return render(request, 'product-creation.html')
+
 
 class VendorView(View):
     @staticmethod
@@ -126,8 +133,43 @@ class VendorView(View):
         return render(request, 'vendor.html', {'products': products})
 
 
-def createproduct(request):
-    return render(request, 'createproduct.html')
+class ProductCreationView(View):
+    @staticmethod
+    def get(request):
+        return render(request, 'product-creation.html')
+
+    @staticmethod
+    def post(request):
+        data = json.loads(request.body)
+        name = data.get('name')
+        price = data.get('price')
+        qoh = data.get('qoh')
+        description = data.get('description')
+
+        user = request.user
+        store = Storefront.objects.filter(owner=user).first()
+        print(store)
+        form_data = {
+            'soldByStoreId': store.storeId,
+            'name': name,
+            'price': price,
+            'qoh': qoh,
+            'description': description,
+            'weight': 1,
+            'height': 1,
+            'length': 1,
+            'width': 1,
+        }
+
+        form = AddProductForm(form_data)
+
+        if form.is_valid():
+            form.save()
+
+            return JsonResponse({'message': 'Product Created! Redirecting you back to the storefront page.'},
+                                status=200)
+        else:
+            return JsonResponse({'message': form.errors}, status=401)
 
 
 def custom_logout(request):
@@ -152,6 +194,7 @@ class UpdateProductView(LoginRequiredMixin, View):
             return render(request, 'edit_product.html', {'product': product})
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
+
     @staticmethod
     def post(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
@@ -182,7 +225,7 @@ class UpdateProductView(LoginRequiredMixin, View):
 class AddProductView(View):
     @staticmethod
     @login_required(login_url='/login/')
-    def get(request, store_id):
+    def get(request):
         return render(request, 'addproduct.html')
 
     @staticmethod
@@ -212,6 +255,7 @@ class AddProductView(View):
             return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
         else:
             return JsonResponse({'message': form.errors}, status=401)
+
 
 def deleteProduct(request, productid):
     Product.objects.filter(productId=productid).delete()
