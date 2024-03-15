@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Storefront, Invoice
+from BackendWork.models import User, Product, Storefront, Invoice, ProductReviews
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -146,7 +146,9 @@ class ProductDetailView(View):
     @staticmethod
     def get(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
-        return render(request, 'product_detail.html', {'product': product})
+        reviews = ProductReviews.objects.filter(productId=product.productId)
+        return render(request, 'product_detail.html', {'product': product, 'reviews': reviews})
+
 
 
 class UpdateProductView(LoginRequiredMixin, View):
@@ -220,9 +222,10 @@ class AddProductView(View):
             return JsonResponse({'message': form.errors}, status=401)
 
 def deleteProduct(request, productid):
+    get_object_or_404(Product, id=productid)
     Product.objects.filter(productId=productid).delete()
-    # return redirect('storefront/')
-    # I assume it should redirect to the storefront, but my branch doesn't have that path
+    return redirect('storefront/')
+    # I assume it should redirect to the storefront, but I'm not entirely sure. Can just change this if it's wrong
 
 
 class ProductDeleteView(View):
