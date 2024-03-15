@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
@@ -10,6 +8,7 @@ from django.http import JsonResponse, HttpResponseForbidden
 from BackendWork.models import User, Product, Category, Storefront, Invoice
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class UserLoginView(View):
@@ -111,26 +110,49 @@ class AccountCartView(View):
 
 def home(request):
     products = Product.objects.all()
-    return render(request, 'home.html', {'products': products})
+    categories = Product.CATEGORY_CHOICES.items()
+    return render(request, 'home.html', {'products': products, 'categories': categories})
 
 
-def storefront(request):
-    user = request.user
-    store = Storefront.objects.filter(owner=user).first()
-    products = Product.objects.filter(soldByStoreId=store)
-
-    return render(request, 'storefront.html', {'store': store, 'products': products})
+def categoryFilter(request, category):
+    products = Product.objects.filter(category=category)
+    categories = Product.CATEGORY_CHOICES.items()
+    return render(request, 'home.html', {'products': products, 'categories': categories})
 
 
-def productCreate(request):
-    return render(request, 'product-creation.html')
+class StorefrontView(View):
+    @staticmethod
+    def get(request):
+        user = request.user
+        store = Storefront.objects.filter(owner=user).first()
+        products = Product.objects.filter(soldByStoreId=store)
+        return render(request, 'storefront.html', {'store': store, 'products': products})
 
+    @staticmethod
+    def post(request):
+        user = request.user
+        store = Storefront.objects.filter(owner=user).first()
+        store_name = request.POST.get('storeName')
+        store_description = request.POST.get('storeDescription')
+        banner_input = request.FILES.get('bannerInput')
+        logo_input = request.FILES.get('logoInput')
+
+        store.name = store_name
+        store.description = store_description
+        store.bannerInput = banner_input
+        store.logoInput = logo_input
+        store.save()
+
+        return JsonResponse({'success': True, 'message': 'Changes confirmed successfully'})
+
+    return render(request, 'storefront.html', {'storefront': store, 'products': products})
 
 class VendorView(View):
     @staticmethod
     def get(request, store_id):
+        store = Storefront.objects.filter(storeId=store_id).first()
         products = Product.objects.filter(soldByStoreId_id=store_id)
-        return render(request, 'vendor.html', {'products': products})
+        return render(request, 'vendor.html', {'products': products, 'store': store})
 
 
 class ProductCreationView(View):
@@ -181,7 +203,9 @@ class ProductDetailView(View):
     @staticmethod
     def get(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
-        return render(request, 'product_detail.html', {'product': product})
+        reviews = ProductReviews.objects.filter(productId=product.productId)
+        return render(request, 'product_detail.html', {'product': product, 'reviews': reviews})
+
 
 
 class UpdateProductView(LoginRequiredMixin, View):
@@ -194,7 +218,6 @@ class UpdateProductView(LoginRequiredMixin, View):
             return render(request, 'edit_product.html', {'product': product})
         else:
             return HttpResponseForbidden("You are not authorized to access this page.")
-
     @staticmethod
     def post(request, product_id):
         product = get_object_or_404(Product, productId=product_id)
@@ -225,7 +248,7 @@ class UpdateProductView(LoginRequiredMixin, View):
 class AddProductView(View):
     @staticmethod
     @login_required(login_url='/login/')
-    def get(request):
+    def get(request, store_id):
         return render(request, 'addproduct.html')
 
     @staticmethod
@@ -239,8 +262,7 @@ class AddProductView(View):
             'description': productData.get('description'),
             'price': productData.get('price'),
             'qoh': productData.get('qoh'),
-            'categoryId': productData.get('categoryId'),
-            'subcategoryId': productData.get('subCategoryId'),
+            'category': productData.get('category'),
             'weight': productData.get('weight'),
             'length': productData.get('length'),
             'width': productData.get('width'),
@@ -256,11 +278,11 @@ class AddProductView(View):
         else:
             return JsonResponse({'message': form.errors}, status=401)
 
-
 def deleteProduct(request, productid):
+    get_object_or_404(Product, id=productid)
     Product.objects.filter(productId=productid).delete()
-    # return redirect('storefront/')
-    # I assume it should redirect to the storefront, but my branch doesn't have that path
+    return redirect('storefront/')
+    # I assume it should redirect to the storefront, but I'm not entirely sure. Can just change this if it's wrong
 
 
 class ProductDeleteView(View):
