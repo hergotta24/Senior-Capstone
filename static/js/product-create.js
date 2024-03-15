@@ -106,6 +106,9 @@ $(document).ready(function () {
         formData.append('qoh', productQOH);
         formData.append('description', productDescription);
 
+        for (let i = 0; i < imagesArray.length; i++) {
+            formData.append('images', imagesArray[i]);
+        }
 
         let url = window.location.pathname
 
@@ -154,6 +157,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 //
 // function makeToast(message, status) {
 //     let toast = document.getElementById("toast");

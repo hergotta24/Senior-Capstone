@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.views import View
-from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
+from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm, ProductImageForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Storefront, Invoice, ProductReviews
+from BackendWork.models import User, Product, Storefront, Invoice, ProductReviews, ProductImage
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -230,7 +230,18 @@ class AddProductView(View):
         form = AddProductForm(form_data)
 
         if form.is_valid():
-            form.save()
+            product = form.save()
+            for image_file in request.FILES.getlist('images'):
+                # Create an instance of your model and save the image file
+                imageForm_data = {
+                    'product': product.productId,
+                    'image': image_file,
+                    'name': image_file.name,
+                }
+                imageForm = ProductImageForm(imageForm_data)
+                if imageForm.is_valid():
+                    imageForm.save()
+
             return JsonResponse({'message': 'Product created! Redirecting you to storefront...'}, status=200)
         else:
             return JsonResponse({'message': form.errors}, status=401)
