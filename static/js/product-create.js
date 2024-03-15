@@ -93,29 +93,29 @@ $(document).ready(function () {
         event.preventDefault();
 
         // Retrieve form data
+
         const productName = $('#product-name').val();
         const productPrice = $('#product-price').val();
         const productQOH = $('#product-qoh').val();
         const productDescription = $('#product-description').text();
 
-        const formData = {
-            name: productName,
-            price: productPrice,
-            qoh: productQOH,
-            description: productDescription,
+
+        var formData = new FormData();
+        formData.append('name', productName);
+        formData.append('price', productPrice);
+        formData.append('qoh', productQOH);
+        formData.append('description', productDescription);
 
 
-        }
         let url = window.location.pathname
 
         // Send form data using fetch post request
-        fetch('/productcreation/', {
+        fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken') // Function to get CSRF token
             },
-            body: JSON.stringify(formData)
+            body: formData
         })
             .then(response => {
                 if (response.ok) {
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 }
             })
             .then(data => {
-                makeToast(data.message, 200);
+                //makeToast(data.message, 200);
                 setTimeout(function () {
                     window.location.href = "/storefront";
                 }, 4000); // 3000 milliseconds = 3 seconds
@@ -134,7 +134,7 @@ $(document).ready(function () {
             .catch(error => {
                 console.error('Error:', error);
                 let errorMessage = typeof error.message === 'object' ? Object.values(error.message).join(" ") : error.message;
-                makeToast(errorMessage, 400);
+                //makeToast(errorMessage, 400);
             });
     })
 })
@@ -154,31 +154,31 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-function makeToast(message, status) {
-    let toast = document.getElementById("toast");
-    let bgColor = "";
-    if (status === 200) {
-        bgColor = "bg-success";
-    } else if (status === 400) {
-        bgColor = "bg-danger";
-    }
-    toast.classList.add(bgColor)
-
-    let toastBody = toast.querySelector('.toast-body');
-
-    // Set the message
-    toastBody.textContent = message;
-
-    // Show the toast
-    let bootstrapToast = new bootstrap.Toast(toast);
-    bootstrapToast.show();
-
-    setTimeout(function () {
-        if (status === 200) {
-            bootstrapToast.hide();
-            toast.classList.remove(bgColor);
-            toastBody.textContent = "";
-        }
-    }, 4000);
-}
+//
+// function makeToast(message, status) {
+//     let toast = document.getElementById("toast");
+//     let bgColor = "";
+//     if (status === 200) {
+//         bgColor = "bg-success";
+//     } else if (status === 400) {
+//         bgColor = "bg-danger";
+//     }
+//     toast.classList.add(bgColor)
+//
+//     let toastBody = toast.querySelector('.toast-body');
+//
+//     // Set the message
+//     toastBody.textContent = message;
+//
+//     // Show the toast
+//     let bootstrapToast = new bootstrap.Toast(toast);
+//     bootstrapToast.show();
+//
+//     setTimeout(function () {
+//         if (status === 200) {
+//             bootstrapToast.hide();
+//             toast.classList.remove(bgColor);
+//             toastBody.textContent = "";
+//         }
+//     }, 4000);
+// }

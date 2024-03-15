@@ -5,7 +5,7 @@ from BackendWork.forms import UserCreationForm, UserChangeForm, AddProductForm
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse, HttpResponseForbidden
-from BackendWork.models import User, Product, Category, Storefront, Invoice
+from BackendWork.models import User, Product, Storefront, Invoice, ProductReviews
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -145,53 +145,12 @@ class StorefrontView(View):
 
         return JsonResponse({'success': True, 'message': 'Changes confirmed successfully'})
 
-    return render(request, 'storefront.html', {'storefront': store, 'products': products})
-
 class VendorView(View):
     @staticmethod
     def get(request, store_id):
         store = Storefront.objects.filter(storeId=store_id).first()
         products = Product.objects.filter(soldByStoreId_id=store_id)
         return render(request, 'vendor.html', {'products': products, 'store': store})
-
-
-class ProductCreationView(View):
-    @staticmethod
-    def get(request):
-        return render(request, 'product-creation.html')
-
-    @staticmethod
-    def post(request):
-        data = json.loads(request.body)
-        name = data.get('name')
-        price = data.get('price')
-        qoh = data.get('qoh')
-        description = data.get('description')
-
-        user = request.user
-        store = Storefront.objects.filter(owner=user).first()
-        print(store)
-        form_data = {
-            'soldByStoreId': store.storeId,
-            'name': name,
-            'price': price,
-            'qoh': qoh,
-            'description': description,
-            'weight': 1,
-            'height': 1,
-            'length': 1,
-            'width': 1,
-        }
-
-        form = AddProductForm(form_data)
-
-        if form.is_valid():
-            form.save()
-
-            return JsonResponse({'message': 'Product Created! Redirecting you back to the storefront page.'},
-                                status=200)
-        else:
-            return JsonResponse({'message': form.errors}, status=401)
 
 
 def custom_logout(request):
@@ -249,25 +208,23 @@ class AddProductView(View):
     @staticmethod
     @login_required(login_url='/login/')
     def get(request, store_id):
-        return render(request, 'addproduct.html')
+        return render(request, 'product-creation.html')
 
     @staticmethod
     @login_required(login_url='/login/')
     def post(request, store_id):
-        productData = json.loads(request.body)
 
         form_data = {
             'soldByStoreId': store_id,
-            'name': productData.get('name'),
-            'description': productData.get('description'),
-            'price': productData.get('price'),
-            'qoh': productData.get('qoh'),
-            'category': productData.get('category'),
-            'weight': productData.get('weight'),
-            'length': productData.get('length'),
-            'width': productData.get('width'),
-            'height': productData.get('height'),
-            'image': productData.get('image')
+            'name': request.POST.get('name'),
+            'category': 'arts_crafts',
+            'description': request.POST.get('description'),
+            'price': request.POST.get('price'),
+            'qoh': request.POST.get('qoh'),
+            'weight': 1,
+            'length': 1,
+            'width': 1,
+            'height': 1,
         }
 
         form = AddProductForm(form_data)
