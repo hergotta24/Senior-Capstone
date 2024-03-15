@@ -2,7 +2,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from .models import User, Product, Payment
+from .models import User, Product, Storefront, Payment
 
 
 class UserCreationForm(UserCreationForm):
@@ -33,14 +33,14 @@ class CardCreationForm(forms.ModelForm):
         fields = ("name", "card_number", "expiration_date", "back_number")
 
 
-# class UserChangeForm():
-#     class Meta:
-#         model = User
-#         fields = ("email", "phone_number", "shipping_address", "billing_address")
+class StorefrontForm(forms.ModelForm):
+    class Meta:
+        model = Storefront
+        fields = ['name', 'description', 'bannerImage', 'logoImage']
 
 
 class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'categoryId', 'subCategoryId', 'weight',
+        fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'category', 'weight',
                   'length', 'width', 'height', 'image']

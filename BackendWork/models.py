@@ -55,6 +55,8 @@ class Storefront(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, null=True)
     dateCreated = models.DateTimeField(auto_now_add=True)
+    bannerImage = models.ImageField(upload_to='storefront_banners/', null=True, blank=True)
+    logoImage = models.ImageField(upload_to='storefront_logos/', null=True, blank=True)
 
 
 class CustomerReviews(models.Model):
@@ -91,14 +93,21 @@ class Product(models.Model):
     class Meta:
         unique_together = ['name', 'soldByStoreId']
 
+    CATEGORY_CHOICES = {'arts_crafts': 'Arts & Crafts Supplies', 'automotive': 'Automotive & Tools',
+                        'children': 'Baby & Kids', 'beauty': 'Beauty & Personal Care', 'books': 'Books & Stationery',
+                        'clothing': 'Clothing & Apparel', 'electronics': 'Electronics', 'fitness': 'Fitness & Exercise',
+                        'furniture_decor': 'Furniture & Decor', 'outdoors': 'Gardening & Outdoor Living',
+                        'health_wellness': 'Health & Wellness', 'jewelry': 'Jewelry & Accessories',
+                        'office': 'Office Supplies', 'pets': 'Pet Supplies', 'sports': 'Sports & Outdoors',
+                        'toys': 'Toys & Games', 'travel': 'Travel & Luggage'}
+
     productId = models.AutoField(primary_key=True)
     soldByStoreId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0.01)])
     qoh = models.PositiveIntegerField(default=0, verbose_name='Quantity on Hand')
-    categoryId = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
-    subCategoryId = models.ForeignKey('SubCategory', on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     weight = models.FloatField(validators=[MinValueValidator(0.01)])
     length = models.FloatField(validators=[MinValueValidator(0.01)])
     width = models.FloatField(validators=[MinValueValidator(0.01)])
@@ -107,15 +116,15 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', null=True, blank=True)
 
 
-class Category(models.Model):
-    categoryId = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-
-
-class SubCategory(models.Model):
-    subCategoryId = models.AutoField(primary_key=True)
-    categoryId = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+# class Category(models.Model):
+#     categoryId = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=30)
+#
+#
+# class SubCategory(models.Model):
+#     subCategoryId = models.AutoField(primary_key=True)
+#     categoryId = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=30)
 
 
 class ProductVideos(models.Model):

@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, Address, Storefront, CustomerReviews, StoreReviews, Product, Category, SubCategory, \
-    ProductVideos, ProductImages, ProductQuestions, ProductReviews, Invoice, LineItem, DisputeTicket
+from .models import (User, Address, Storefront, CustomerReviews, StoreReviews, Product, ProductVideos, ProductImages,
+                     ProductQuestions, ProductReviews, Invoice, LineItem, DisputeTicket)
 
 
 class UserAdmin(UserAdmin):
@@ -35,8 +35,8 @@ admin.site.register(Storefront)
 admin.site.register(CustomerReviews)
 admin.site.register(StoreReviews)
 admin.site.register(Product)
-admin.site.register(Category)
-admin.site.register(SubCategory)
+# admin.site.register(Category)
+# admin.site.register(SubCategory)
 admin.site.register(ProductVideos)
 admin.site.register(ProductImages)
 admin.site.register(ProductQuestions)
