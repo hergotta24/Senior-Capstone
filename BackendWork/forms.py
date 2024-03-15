@@ -2,7 +2,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from .models import User, Product, Storefront
+from .models import User, Product, Storefront, ProductImage
 
 
 class UserCreationForm(UserCreationForm):
@@ -37,4 +37,10 @@ class AddProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['soldByStoreId', 'name', 'description', 'price', 'qoh', 'category', 'weight',
-                  'length', 'width', 'height', 'image']
+                  'length', 'width', 'height']
+
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = ['image']
