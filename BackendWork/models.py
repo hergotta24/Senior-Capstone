@@ -59,15 +59,6 @@ class Storefront(models.Model):
     logoImage = models.ImageField(upload_to='storefront_logos/', null=True, blank=True)
 
 
-class CustomerReviews(models.Model):
-    reviewId = models.AutoField(primary_key=True)
-    customerId = models.ForeignKey(User, on_delete=models.CASCADE)
-    reviewerId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
-    rating = models.PositiveIntegerField()
-    comment = models.CharField(max_length=500)
-    reviewDate = models.DateTimeField(auto_now_add=True)
-
-
 class StoreReviews(models.Model):
     reviewId = models.AutoField(primary_key=True)
     storeId = models.ForeignKey(Storefront, on_delete=models.CASCADE)
@@ -114,44 +105,20 @@ class Product(models.Model):
     width = models.FloatField(validators=[MinValueValidator(0.01)])
     height = models.FloatField(validators=[MinValueValidator(0.01)])
     dateAdded = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='product_images/', null=True, blank=True)
+
+    @property
+    def images(self):
+        return self.product_image.all()
+
+    @property
+    def thumbnail(self):
+        return self.product_image.first()
 
 
-# class Category(models.Model):
-#     categoryId = models.AutoField(primary_key=True)
-#     name = models.CharField(max_length=30)
-#
-#
-# class SubCategory(models.Model):
-#     subCategoryId = models.AutoField(primary_key=True)
-#     categoryId = models.ForeignKey(Category, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=30)
-
-
-class ProductVideos(models.Model):
-    videoId = models.AutoField(primary_key=True)
-    productId = models.ForeignKey(Product, on_delete=models.CASCADE)
-    videoURL = models.URLField(max_length=100)
-    videoTitle = models.CharField(max_length=30)
-    videoDescription = models.CharField(max_length=500, null=True)
-
-
-class ProductImages(models.Model):
-    imageId = models.AutoField(primary_key=True)
-    productId = models.ForeignKey(Product, on_delete=models.CASCADE)
-    imageURL = models.URLField(max_length=100)
-    imageTitle = models.CharField(max_length=30)
-    imageDescription = models.CharField(max_length=500, null=True)
-
-
-class ProductQuestions(models.Model):
-    questionId = models.AutoField(primary_key=True)
-    askedById = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    productId = models.ForeignKey(Product, on_delete=models.CASCADE)
-    question = models.CharField(max_length=500)
-    dateAsked = models.DateTimeField(auto_now_add=True)
-    answer = models.CharField(max_length=500)
-    dateAnswered = models.DateTimeField(default=None)
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_image')
+    name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='product_images/')
 
 
 class ProductReviews(models.Model):
@@ -169,14 +136,3 @@ class LineItem(models.Model):
     productId = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     quantity = models.PositiveIntegerField()
     linePrice = models.DecimalField(max_digits=8, decimal_places=2)
-
-
-class DisputeTicket(models.Model):
-    initiatorId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="initiatedTickets")
-    invoiceId = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    disputeDetails = models.CharField(max_length=1000)
-    disputeDate = models.DateTimeField(auto_now_add=True)
-    disputeStatus = models.CharField(max_length=20)
-    resolvedBy = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="resolvedTickets")
-    resolutionDetails = models.CharField(max_length=1000)
-    resolutionDate = models.DateTimeField()
