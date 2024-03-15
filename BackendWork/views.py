@@ -99,7 +99,7 @@ class AccountCartView(View):
     @staticmethod
     @login_required(login_url='/login/')
     def get(request):
-        invoiceNumber = Invoice.objects.filter(customerId=request.user.id).order_by("customerId").first()
+        invoiceNumber = Invoice.objects.get(customerId=request.user.id, orderStatus='C1')
         user_cart = LineItem.objects.filter(invoiceId=invoiceNumber)
         subtotal = 0.00
         for y in user_cart:
@@ -120,13 +120,13 @@ class AccountCartView(View):
         name = data.get('name')
         card = data.get('card')
         expiration = data.get('expiration')
-        back = data.get('back')
+        back = data.get('back_number')
 
         form_data = {
             'name': name,
-            'card': card,
-            'expiration': expiration,
-            'back': back,
+            'card_number': card,
+            'expiration_date': expiration,
+            'back_number': back,
         }
 
         form = CardCreationForm(form_data)
@@ -197,6 +197,37 @@ class ProductDetailView(View):
         product = get_object_or_404(Product, productId=product_id)
         reviews = ProductReviews.objects.filter(productId=product.productId)
         return render(request, 'product_detail.html', {'product': product, 'reviews': reviews})
+
+    @staticmethod
+    @login_required(login_url='/login/')
+    def post(request, product_id):
+        data = json.loads(request.body)
+        quantity = data.get('quantity')
+        cart = Invoice.objects.get(customerId=request.user.id, orderStatus='C1')
+        product = get_object_or_404(Product, productId=product_id)
+
+        try:
+            addingProduct = LineItem.objects.get(invoiceId=cart.invoiceId, productId=product.productId)
+        except LineItem.DoesNotExist:
+            form_data = {
+                'invoiceId': cart.invoiceId,
+                'productId': product.productId,
+                'quantity': quantity,
+                'linePrice': 1,
+            }
+            form = LineItemCreationForm(form_data)
+
+            print("Form is created here")
+
+            if form.is_valid():
+                form.save();
+                return JsonResponse({'message': 'Card success! Redirecting you to home page...'}, status=200)
+            else:
+                return JsonResponse({'message': form.errors}, status=401)
+
+        addingProduct.quantity += int(quantity)
+        addingProduct.save()
+        return JsonResponse({'message': 'Card success! Redirecting you to home page...'}, status=200)
 
 
 class UpdateProductView(LoginRequiredMixin, View):

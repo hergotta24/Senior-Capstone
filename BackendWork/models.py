@@ -78,6 +78,7 @@ class StoreReviews(models.Model):
 
 
 class Invoice(models.Model):
+    ORDER_STATUS = [('C1', 'Cart'), ('C2', 'Completed')]
     invoiceId = models.AutoField(primary_key=True)
     customerId = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     storeId = models.ForeignKey(Storefront, on_delete=models.SET_NULL, null=True)
@@ -85,7 +86,7 @@ class Invoice(models.Model):
     discount = models.DecimalField(max_digits=8, decimal_places=2)
     tax = models.DecimalField(max_digits=8, decimal_places=2)
     shipping = models.DecimalField(max_digits=8, decimal_places=2)
-    orderStatus = models.CharField(max_length=20)
+    orderStatus = models.CharField(max_length=2, choices=ORDER_STATUS)
     invoiceDate = models.DateTimeField(auto_now_add=True)
 
 
