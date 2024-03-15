@@ -46,6 +46,8 @@ class Storefront(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, null=True)
     dateCreated = models.DateTimeField(auto_now_add=True)
+    bannerImage = models.ImageField(upload_to='storefront_banners/', null=True, blank=True)
+    logoImage = models.ImageField(upload_to='storefront_logos/', null=True, blank=True)
 
 
 class CustomerReviews(models.Model):

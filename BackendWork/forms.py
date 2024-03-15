@@ -2,7 +2,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from .models import User, Product
+from .models import User, Product, Storefront
 
 
 class UserCreationForm(UserCreationForm):
@@ -27,10 +27,10 @@ class UserCreationForm(UserCreationForm):
         return user
 
 
-# class UserChangeForm():
-#     class Meta:
-#         model = User
-#         fields = ("email", "phone_number", "shipping_address", "billing_address")
+class StorefrontForm(forms.ModelForm):
+    class Meta:
+        model = Storefront
+        fields = ['name', 'description', 'bannerImage', 'logoImage']
 
 
 class AddProductForm(forms.ModelForm):
