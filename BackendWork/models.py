@@ -15,6 +15,18 @@ class User(AbstractUser):
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, null=True,
                                 related_name="paymentMethod", blank=True)
 
+    # Sprint 5: fields/methods to support favoriting/unfavoriting products
+    favorites = models.ManyToManyField('Product', related_name="favoritedBy", blank=True)
+
+    def add_favorite(self, product):
+        self.favorites.add(product)
+
+    def remove_favorite(self, product):
+        self.favorites.remove(product)
+
+    def has_favorite(self, product):
+        return self.favorites.filter(pk=product.pk).exists()
+
 
 class Payment(models.Model):
     name = models.CharField(max_length=100)
