@@ -174,6 +174,7 @@ class StorefrontView(View):
         return JsonResponse({'success': True, 'message': 'Changes confirmed successfully'})
 
 
+
 class VendorView(View):
     @staticmethod
     def get(request, store_id):

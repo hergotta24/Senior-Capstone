@@ -76,8 +76,8 @@ class Invoice(models.Model):
     subtotal = models.DecimalField(max_digits=8, decimal_places=2)
     discount = models.DecimalField(max_digits=8, decimal_places=2)
     tax = models.DecimalField(max_digits=8, decimal_places=2)
-    shipping = models.DecimalField(max_digits=8, decimal_places=2)
-    orderStatus = models.CharField(max_length=2, choices=ORDER_STATUS)
+    shipping = models.CharField(max_length=2, choices=ORDER_STATUS)
+    orderStatus = models.CharField(max_length=20)
     invoiceDate = models.DateTimeField(auto_now_add=True)
 
 
