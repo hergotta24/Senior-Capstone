@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block content %}
+    {% load static %}
     <div class="col d-flex flex-column overflow-x-hidden h-100 w-100 p-4" id="content">
         <h2 class="primary-color text-left my-5">My Cart</h2>
         <div>
@@ -53,48 +53,50 @@
         </div>
         <div>
             <button type="button" class="collapsible w-75 m-0">Payment Information</button>
-            <table class="table table-dark table-borderless w-75 m-0" style="display: none;">
-                <form method="post" action="{% url 'AccountCartView' %}" id="cartForm">
-                    {% csrf_token %}
+            <form method="post" id="cartForm">
+                <table class="table table-dark table-borderless w-75 m-0" style="display: none;">
                     <tbody style="border-width: 3px">
                     <tr>
                         <td></td>
                         <td>
                             <label>Full Name: </label>
-                            <input type="text" id="name" name="name" pattern="[A-Za-z]+"
-                                   oninvalid="setCustomValidity('Please enter on alphabets only.')">
+                            <input type="text" class="form-control form-control-lg" id="name" name="name"
+                                   oninvalid="setCustomValidity('Please enter in alphabets only.')">
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
                             <label>Card Number: </label>
-                            <input type="text" id="card" name="card" minlength="15" maxlength="16" size="16"
-                                   pattern="[0-9]{16}" oninvalid="setCustomValidity('Please enter correct card format.')">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <label>Expiration Date: </label>
-                            <input type="text" id="expiration" name="expiration" minlength="4" maxlength="4" size="4"
-                                   oninvalid="setCustomValidity('Please enter expire date.')">
-                        </td>
-                        <td>
-                            <label>Back Number: </label>
-                            <input type="text" id="back_number" name="back_number" minlength="3" maxlength="3" size="3"
+                            <input type="text" class="form-control form-control-lg" id="card" name="card"
+                                   pattern="[0-9]{16}"
                                    oninvalid="setCustomValidity('Please enter correct card format.')">
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <button class="btn btn-primary w-75" type="submit">Submit</button>
+                            <label>Expiration Date: </label>
+                            <input type="text" class="form-control form-control-lg" id="expiration"
+                                   name="expiration" minlength="4" maxlength="4" size="4"
+                                   pattern="[0-9]{4}" oninvalid="setCustomValidity('Please enter expire date.')">
+                        </td>
+                        <td>
+                            <label>Back Number: </label>
+                            <input type="text" class="form-control form-control-lg" id="back_number"
+                                   name="back_number" minlength="3" maxlength="3" size="3" pattern="[0-9]{3}"
+                                   oninvalid="setCustomValidity('Please enter correct card format.')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="submit" class="btn btn-primary w-75">Submit</button>
                         </td>
                     </tr>
                     </tbody>
-                </form>
-            </table>
+                </table>
+            </form>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
