@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/productdetail.css' %}">
+{% endblock %}
 {% block content %}
     <div class="col d-flex flex-column overflow-x-hidden h-100 w-100 p-4" id="content">
         <div class="m-auto h-100 w-100 gap-3 p-3">
@@ -40,6 +43,10 @@
                             </div>
 
                         </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 d-flex fit-content flex-wrap px-2">
+                    <form id="productCreationForm" method="POST" enctype="multipart/form-data">
                         <div class="modal fade" id="imageInputModal" tabindex="-1"
                              aria-labelledby="imageInputModalLabel"
                              aria-hidden="true">
@@ -57,7 +64,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn hover" data-bs-dismiss="modal"
-                                                onclick="document.getElementById('imageInput').value=''">Close
+                                                onclick="close()">Close
                                         </button>
                                         <button type="button" class="btn hover" data-bs-dismiss="modal"
                                                 onclick="addImage()">Save changes
@@ -66,10 +73,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 d-flex fit-content flex-wrap px-2">
-                    <form id="productCreationForm">
                         <div class="col-12 mb-2 pe-5">
                             <label for="product-name" class="col-12 col-lg-4 primary-color">Product Name:</label>
                             <input id="product-name" type="text" class="col-12 col-lg-7 btn p-0 btn-primary"/>
