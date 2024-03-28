@@ -37,6 +37,9 @@ class Favorite(models.Model):
     class Meta:
         unique_together = ('user', 'product')
 
+    def __str__(self):
+        return f"{self.user.username} (ID {self.user.id}), {self.product.name} (ID {self.product.productId})"
+
 
 class Payment(models.Model):
     name = models.CharField(max_length=100)
